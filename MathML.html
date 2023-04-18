@@ -10,20 +10,21 @@
     function inlineFractionsToMathML(text) {
       // match inline math expression and replace with MathML
       // currently support
-      // - fractions: must be in format (...)/(...)
+      // - fractions: must be in format (...)/(...). If no parentheses were given, will use +-() or whitespace to group
       // - power: e.g. x^2, (x+1)^2, (3x+1)^(2x)
       // - limit: the "approach" must be in parentheses
-      text = text.replace(/->|-&gt;/g, "→");
-      text = text.replace(/([+\-*→])/g, "<mo>$1</mo>");
       // has to do it this way because of how each open/close bracket has to be explicitly written in MathML
       text = text.replace(/\((.+?)\)\^\((.+?)\)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
       text = text.replace(/\((.+?)\)\^([^() ]+)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow>$2</mrow></msup>");
       text = text.replace(/([^() ]+)\^\((.+?)\)/g, "<msup><mrow>$1</mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
       text = text.replace(/([^() ]+)\^([^() ]+)/g, "<msup><mrow>$1</mrow><mrow>$2</mrow></msup>");
+      text = text.replace(/(?:([^+\-() ]+)|\((.+?)\))\/(?:([^+\-() ]+)|\((.+?)\))/g, "<mfrac><mrow>$1$2</mrow><mrow>$3$4</mrow></mfrac>");
+      text = text.replace(/->|-&gt;/g, "→");
+      text = text.replace(/([+\-*→])/g, "<mo>$1</mo>");
       text = text.replace(/(\d+)/g, "<mn>$1</mn>");
       text = text.replace(/(?<![a-z])([a-z])(?![a-z])/g, "<mi>$1</mi>");
       text = text.replace(/lim *\((.+?)\)/g, "<munder><ms>lim</ms><mrow>$1</mrow></munder>");
-      text = text.replace(/\((.+?)\)\/\((.+?)\)/g, "<mfrac><mrow>$1</mrow><mrow>$2</mrow></mfrac>");
+      //text = text.replace(/\((.+?)\)\/\((.+?)\)/g, "<mfrac><mrow>$1</mrow><mrow>$2</mrow></mfrac>");
       return text;
     }
 
