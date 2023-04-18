@@ -13,12 +13,15 @@
       // - fractions: must be in format (...)/(...). If no parentheses were given, will use +-() or whitespace to group
       // - power: e.g. x^2, (x+1)^2, (3x+1)^(2x)
       // - limit: the "approach" must be in parentheses
-      // has to do it this way because of how each open/close bracket has to be explicitly written in MathML
-      text = text.replace(/\((.+?)\)\^\((.+?)\)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
-      text = text.replace(/\((.+?)\)\^([^() ]+)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow>$2</mrow></msup>");
-      text = text.replace(/([^() ]+)\^\((.+?)\)/g, "<msup><mrow>$1</mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
-      text = text.replace(/([^() ]+)\^([^() ]+)/g, "<msup><mrow>$1</mrow><mrow>$2</mrow></msup>");
-      text = text.replace(/(?:([^+\-() ]+)|\((.+?)\))\/(?:([^+\-() ]+)|\((.+?)\))/g, "<mfrac><mrow>$1$2</mrow><mrow>$3$4</mrow></mfrac>");
+      // loop for nested power e.g. (x^3 + 2)^2
+      while (text.indexOf("^") > 0) {
+        // has to do it this way because of how each open/close bracket has to be explicitly written in MathML
+        text = text.replace(/\((.+?)\)\^\((.+?)\)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
+        text = text.replace(/\((.+?)\)\^([^+\-() ]+)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow>$2</mrow></msup>");
+        text = text.replace(/([^+\-() ]+)\^\((.+?)\)/g, "<msup><mrow>$1</mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
+        text = text.replace(/([^+\-()<> ]+)\^([^+\-()<> ]+)/g, "<msup><mrow>$1</mrow><mrow>$2</mrow></msup>");
+      }
+      text = text.replace(/(?:([^+\-() ]+)|\((.+?)\))(?<!<)\/(?:([^+\-() ]+)|\((.+?)\))/g, "<mfrac><mrow>$1$2</mrow><mrow>$3$4</mrow></mfrac>");
       text = text.replace(/->|-&gt;/g, "→");
       text = text.replace(/([+\-*→])/g, "<mo>$1</mo>");
       text = text.replace(/(\d+)/g, "<mn>$1</mn>");
@@ -29,14 +32,7 @@
     }
 
     function toggle_answer() {
-      if (true || document.getElementById("answer").style.display === "none") {
-        document.getElementById("answer").style.display = "block";
-        //document.getElementById("toggle_button").innerHTML = "hide answer";
-        document.getElementById("equation_ml").innerHTML = inlineFractionsToMathML(document.getElementById("equation").value);
-      } else {
-        document.getElementById("answer").style.display = "none";
-        document.getElementById("toggle_button").innerHTML = "show answer";
-      }
+      document.getElementById("equation_ml").innerHTML = inlineFractionsToMathML(document.getElementById("equation").value);
     }
   </script>
 </head>
@@ -44,15 +40,24 @@
 <table>
   <tr>
     <th style="width:300px">Problem</th>
-    <th>Answer</th>
+    <th style="width:300px">Answer</th>
   </tr>
   <tr>
     <td>
       <input type="text" id="equation" style="width: 280px"/><br>
+      <math>
+        <msup>
+          <mrow><mn>2</mn></mrow>
+          <msup>
+          <mrow><mn>2</mn></mrow>
+          <mrow><mn>2</mn></mrow>
+          </msup>
+        </msup>
+      </math>
     </td>
     <td>
-      <span id="answer" style="display:none"></span>
-      <math id="equation_ml"></math><br>
+      <math id="equation_ml"></math>
+      <br>
     </td>
   </tr>
 </table>
