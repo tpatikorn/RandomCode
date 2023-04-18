@@ -11,10 +11,14 @@
       // match inline math expression and replace with MathML
       // currently support
       // - fractions: must be in format (...)/(...)
-      // - power: only plain variables and numbers e.g. x^2
+      // - power: e.g. x^2, (x+1)^2, (3x+1)^(2x)
       // - limit: the "approach" must be in parentheses
       text = text.replace(/->|-&gt;/g, "→");
       text = text.replace(/([+\-*→])/g, "<mo>$1</mo>");
+      // has to do it this way because of how each open/close bracket has to be explicitly written in MathML
+      text = text.replace(/\((.+?)\)\^\((.+?)\)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
+      text = text.replace(/\((.+?)\)\^([^() ]+)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow>$2</mrow></msup>");
+      text = text.replace(/([^() ]+)\^\((.+?)\)/g, "<msup><mrow>$1</mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
       text = text.replace(/([^() ]+)\^([^() ]+)/g, "<msup><mrow>$1</mrow><mrow>$2</mrow></msup>");
       text = text.replace(/(\d+)/g, "<mn>$1</mn>");
       text = text.replace(/(?<![a-z])([a-z])(?![a-z])/g, "<mi>$1</mi>");
