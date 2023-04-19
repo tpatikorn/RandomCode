@@ -5,6 +5,9 @@
     table, th, tr, td {
       border: 1px solid black
     }
+    math {
+      font-family: "Asana Math",serif
+    }
   </style>
   <script type="text/javascript">
     function inlineMathToMathML(text) {
@@ -24,8 +27,9 @@
       }
       text = text.replace(/(?:([^+\-() ]+)|\((.+?)\))(?<!<)\/(?:([^+\-() ]+)|\((.+?)\))/g, "<mfrac><mrow>$1$2</mrow><mrow>$3$4</mrow></mfrac>");
       text = text.replace(/->|-&gt;/g, "→");
+      text = text.replace(/inf|&infin;/g, "∞");
       text = text.replace(/([+\-*→()])/g, "<mo>$1</mo>");
-      text = text.replace(/(\d+)/g, "<mn>$1</mn>");
+      text = text.replace(/(\d+|∞)/g, "<mn>$1</mn>");
       text = text.replace(/(?<![a-z])([a-z])(?![a-z])/g, "<mi>$1</mi>");
       //text = text.replace(/\((.+?)\)\/\((.+?)\)/g, "<mfrac><mrow>$1</mrow><mrow>$2</mrow></mfrac>");
       return text;
