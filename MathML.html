@@ -5,10 +5,12 @@
     table, th, tr, td {
       border: 1px solid black
     }
+
     math {
-      font-family: "Asana Math",serif
+      font-family: "Asana Math", serif
     }
-    .over,.under {
+
+    .over, .under {
       font-size: 50%
     }
   </style>
@@ -23,12 +25,22 @@
       // - integral: must be in the format: integral ($1, $2) where $1 and $2 are arbitrary expression. S1 will appear below and $2 above the integral sign
       // - from: the substitution vertical bar. Must be in format: from ($1, $2). Same rule as integral applies.
       // for the under/over of integral, from, and limit are generated with class="under" and class="over" by default. They do nothing, but will help you stylize it with CSS
+      const integral_isunderover = document.getElementById("integral_isunderover").checked;
+      const from_isunderover = document.getElementById("from_isunderover").checked;
       text = text.replace(/lim *\((.+?)\)/g, "<munder><ms>lim</ms><mrow class='under'>$1</mrow></munder>");
       while (text.indexOf("integral") >= 0) {
-        text = text.replace(/integral *\((.+?),(.+?)\)/g, "<munderover><ms>&int;</ms><mrow class='under'>$1</mrow><mrow class='over'>$2</mrow></munderover>");
+        if (integral_isunderover) {
+          text = text.replace(/integral *\((.+?),(.+?)\)/g, "<munderover><ms>&int;</ms><mrow class='under'>$1</mrow><mrow class='over'>$2</mrow></munderover>");
+        } else {
+          text = text.replace(/integral *\((.+?),(.+?)\)/g, "<msubsup><ms>&int;</ms><mrow class='under'>$1</mrow><mrow class='over'>$2</mrow></msubsup>");
+        }
       }
       while (text.indexOf("from") >= 0) {
-        text = text.replace(/from *\((.+?),(.+?)\)/g, "<munderover><ms>|</ms><mrow class='under'>$1</mrow><mrow class='over'>$2</mrow></munderover>");
+        if (from_isunderover) {
+          text = text.replace(/from *\((.+?),(.+?)\)/g, "<munderover><ms style='font-size: 100%'>|</ms><mrow class='under'>$1</mrow><mrow class='over'>$2</mrow></munderover>");
+        } else {
+          text = text.replace(/from *\((.+?),(.+?)\)/g, "<msubsup><ms style='font-size: 100%'>|</ms><mrow class='under'>$1</mrow><mrow class='over'>$2</mrow></msubsup>");
+        }
       }
       // loop for nested power e.g. (x^3 + 2)^2
       while (text.indexOf("^") >= 0) {
@@ -87,8 +99,13 @@
   </tr>
   <tr>
     <td rowspan="2">
-      <label for="expression"></label><input type="text" id="expression" style="width: 280px" spellcheck="false"
-                                           value="integral(x=0, 2) integral (y=1,4) lim(h->0) (f(x+h)-f(x))/h dy dx from(a=3,5)"/><br>
+      <label for="expression"></label>
+      <textarea id="expression" style="width: 280px;height: 100px"
+                spellcheck="false">integral(x=0, 2) integral (y=1,4) lim(h->0) (f(x+h)-f(x))/h dy dx from(a=3,5)</textarea><br>
+      <input type="checkbox" id="integral_isunderover" checked/><label for="integral_isunderover">use under/over for
+      integral</label><br>
+      <input type="checkbox" id="from_isunderover" checked/><label for="from_isunderover">use under/over for evaluation
+      bound</label>
     </td>
     <td>
       beautiful:
@@ -100,7 +117,7 @@
       MathML
       <button id="copy_button" onclick="copy_text()">copy text</button>
       <br> <label for="expression_text"></label><textarea id="expression_text" spellcheck="false"
-                                                        style="width: 100%; height: 100px" readonly></textarea>
+                                                          style="width: 100%; height: 100px" readonly></textarea>
     </td>
   </tr>
 </table>
