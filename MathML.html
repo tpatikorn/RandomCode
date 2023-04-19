@@ -7,7 +7,7 @@
     }
   </style>
   <script type="text/javascript">
-    function inlineFractionsToMathML(text) {
+    function inlineMathToMathML(text) {
       // match inline math expression and replace with MathML
       // currently support
       // - fractions: must be in format (...)/(...). If no parentheses were given, will use +-() or whitespace to group
@@ -49,7 +49,7 @@
     }
 
     function beautify_exp() {
-      const new_ml_text = inlineFractionsToMathML(document.getElementById("expression").value);
+      const new_ml_text = inlineMathToMathML(document.getElementById("expression").value);
       document.getElementById("expression_ml").innerHTML = new_ml_text;
       document.getElementById("expression_text").textContent = "<math>" + new_ml_text + "</math>";
     }
