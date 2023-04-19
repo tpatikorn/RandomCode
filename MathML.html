@@ -54,6 +54,7 @@
 
 
       text = text.replace(/->|-&gt;/g, "→");
+      text = text.replace(/(?<!\w\w)(?<=[a-z])'/g, "<mo>&prime;</mo>");
       text = text.replace(/inf|&infin;/g, "∞");
       text = text.replace(/([+\-*→(),=])(?!')/g, "<mo>$1</mo>");
       text = text.replace(/(\d+|∞)/g, "<mn>$1</mn>");
