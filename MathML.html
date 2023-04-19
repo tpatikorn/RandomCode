@@ -24,7 +24,7 @@
       }
       text = text.replace(/(?:([^+\-() ]+)|\((.+?)\))(?<!<)\/(?:([^+\-() ]+)|\((.+?)\))/g, "<mfrac><mrow>$1$2</mrow><mrow>$3$4</mrow></mfrac>");
       text = text.replace(/->|-&gt;/g, "→");
-      text = text.replace(/([+\-*→])/g, "<mo>$1</mo>");
+      text = text.replace(/([+\-*→()])/g, "<mo>$1</mo>");
       text = text.replace(/(\d+)/g, "<mn>$1</mn>");
       text = text.replace(/(?<![a-z])([a-z])(?![a-z])/g, "<mi>$1</mi>");
       //text = text.replace(/\((.+?)\)\/\((.+?)\)/g, "<mfrac><mrow>$1</mrow><mrow>$2</mrow></mfrac>");
@@ -68,7 +68,7 @@
   <tr>
     <td rowspan="2">
       <label for="expression"></label><input type="text" id="expression" style="width: 280px" spellcheck="false"
-                                           value="lim(x->3) (3x^2 + 3)^(2-7x^2)"/><br>
+                                           value="lim(h->0) (f(x+h)-f(x))/h"/><br>
     </td>
     <td>
       beautiful:
