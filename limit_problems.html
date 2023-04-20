@@ -1,0 +1,110 @@
+<html lang=en">
+<head>
+  <title>Calculus: limit</title>
+  <script src="./math_ml.js" charset="utf-8"></script>
+  <style>
+    table, th, tr, td {
+      border: 1px solid black
+    }
+
+    math {
+      font-family: "Asana Math", serif
+    }
+
+    .over, .under {
+      font-size: 50%
+    }
+  </style>
+  <script type="text/javascript">
+    const problems = [
+      ["lim (x->5) x^2", 25],
+      ["lim (x->1) (x+3)/(x+1)", 2],
+      ["lim (x->inf) 1/x", 0],
+      ["lim (x->-inf) 1/x", 0],
+      ["lim (x->1) 2/(x+1)", 1],
+      ["lim (x->1) (2x-2)/(x-1)", 2],
+      ["lim (x->0) (x^2566)/(x^2566)", 1],
+      ["lim (x->0) (x^2023)/(x^2023)", 1],
+      ["lim (x->inf) (x^2566)/(x^2566)", 1],
+      ["lim (x->inf) (x^2023)/(x^2023)", 1],
+      ["lim (x->-1) (x+1)/(x-1)", 0],
+      ["lim (x->0) (x-1)/(x^2)", Infinity],
+      ["lim (x->0) (x+1)/(1-x^2)", -Infinity],
+      ["lim (x->2) 10/(x+3)", 2],
+      ["lim (x->2) (x^2-4)/(x-2)", 4],
+      ["lim (x->-2) (x^2-4)/(x+2)", -4],
+      ["lim (x->0) 2^x", 1],
+      ["lim (x->0) 1/(x^2)", Infinity],
+      ["lim (x->inf) (x^2566)/(x^2023)", Infinity],
+      ["lim (x->inf) (x^2023)/(x^2566)", 0],
+      ["lim (x->0) (x^2566)/(x^2023)", 0],
+      ["lim (x->0) (x^2022)/(x^2566)", Infinity],
+    ]
+
+    function copy_text() {
+      // Get the text field
+      const copyText = document.getElementById("expression_text");
+
+      // Select the text field
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+
+      // Copy the text inside the text field
+      navigator.clipboard.writeText(copyText.value);
+      document.getElementById("copy_button").textContent = "copied!...";
+      setTimeout(() => {
+        document.getElementById("copy_button").textContent = "copy text";
+      }, 3000);
+
+    }
+
+    function beautify_exp() {
+      const new_ml_text = inlineMathToMathML(document.getElementById("expression").value);
+      document.getElementById("expression_ml").innerHTML = "<math>" + new_ml_text + "</math>";
+      document.getElementById("expression_text").textContent = "<math>" + new_ml_text + "</math>";
+    }
+
+    window.onload = function () {
+      var final_problems = "";
+      var final_answers = "";
+      for(var i = 0; i < problems.length; i++) {
+        final_problems = final_problems + "<math>" + inlineMathToMathML(problems[i][0]) + "</math><br>"
+        final_answers = final_answers + problems[i][1] + "<br>"
+      }
+      document.getElementById("expression_ml").innerHTML = final_problems;
+    };
+  </script>
+</head>
+<body>
+<table>
+  <tr>
+    <th style="width:300px">Problem</th>
+    <th style="width:300px">Answer</th>
+  </tr>
+  <tr>
+    <td rowspan="2">
+      <label for="expression"></label>
+      <textarea id="expression" style="width: 280px;height: 100px"
+                spellcheck="false">integral(x=0, 2) integral (y=1,4) lim(h->0) (f(x+h)-f(x))/h dy dx from(a=3,5)</textarea><br>
+      <input type="checkbox" id="integral_isunderover" checked/><label for="integral_isunderover">use under/over for
+      integral</label><br>
+      <input type="checkbox" id="from_isunderover" checked/><label for="from_isunderover">use under/over for evaluation
+      bound</label>
+    </td>
+    <td>
+      beautiful:
+      <span id="expression_ml"></span>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      MathML
+      <button id="copy_button" onclick="copy_text()">copy text</button>
+      <br> <label for="expression_text"></label><textarea id="expression_text" spellcheck="false"
+                                                          style="width: 100%; height: 100px" readonly></textarea>
+    </td>
+  </tr>
+</table>
+<button id="toggle_button" onclick="beautify_exp() ">beautify!</button>
+</body>
+</html>
