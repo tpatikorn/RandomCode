@@ -34,7 +34,10 @@
     }
 
     function beautify_exp() {
-      const new_ml_text = inlineMathToMathML(document.getElementById("expression").value);
+      const integral_isunderover = document.getElementById("integral_isunderover").checked;
+      const from_isunderover = document.getElementById("from_isunderover").checked;
+      const new_ml_text = inlineMathToMathML(document.getElementById("expression").value, 
+                                               integral_isunderover, from_isunderover);
       document.getElementById("expression_ml").innerHTML =  "<math>" + new_ml_text + "</math>";
       document.getElementById("expression_text").textContent = "<math>" + new_ml_text + "</math>";
     }
