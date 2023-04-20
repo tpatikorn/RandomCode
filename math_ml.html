@@ -1,7 +1,7 @@
 <html lang=en">
 <head>
   <title>Calculus: limit</title>
-  <script src="./mathml.js"></script>
+  <script src="./math_ml.js" charset="utf-8"></script>
   <style>
     table, th, tr, td {
       border: 1px solid black
@@ -16,8 +16,6 @@
     }
   </style>
   <script type="text/javascript">
-   
-
     function copy_text() {
       // Get the text field
       const copyText = document.getElementById("expression_text");
@@ -37,7 +35,7 @@
 
     function beautify_exp() {
       const new_ml_text = inlineMathToMathML(document.getElementById("expression").value);
-      document.getElementById("expression_ml").innerHTML = new_ml_text;
+      document.getElementById("expression_ml").innerHTML =  "<math>" + new_ml_text + "</math>";
       document.getElementById("expression_text").textContent = "<math>" + new_ml_text + "</math>";
     }
 
@@ -64,7 +62,7 @@
     </td>
     <td>
       beautiful:
-      <math id="expression_ml"></math>
+      <span id="expression_ml"></span>
     </td>
   </tr>
   <tr>
