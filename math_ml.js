@@ -33,7 +33,9 @@ function inlineMathToMathML(text, integral_isunderover = true, from_isunderover 
   }
   text = text.replace(/(?:([^+\-() ]+)|\((.+?)\))(?<!<)\/(?:([^+\-() ]+)|\((.+?)\))/g, "<mfrac><mrow>$1$2</mrow><mrow>$3$4</mrow></mfrac>");
 
-  text = text.replace(/(sin|cos|tan|sec|csc|cosec|cot)/g, "<ms>$1</ms>");
+  text = text.replace(/(log)_(e|\d+)/g, "<msub><ms>&nbsp;$1</ms><mn>$2</mn></msub>"); // log based numbers or e
+  text = text.replace(/(log)_(\w+)/g, "<msub><ms>&nbsp;$1</ms><mi>$2</mi></msub>"); // log based variables
+  text = text.replace(/(?<!<ms>)(sin|cos|tan|sec|csc|cosec|cot|log|ln)/g, "<ms>&nbsp;$1</ms>");
   text = text.replace(/->|-&gt;/g, "→");
   text = text.replace(/(?<!\w\w)(?<=[a-z])'/g, "<mo>&prime;</mo>");
   text = text.replace(/(?<!<mo>)([+\-*→(),=])(?!')/g, "<mo>$1</mo>");
