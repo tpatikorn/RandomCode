@@ -2,8 +2,9 @@
 <head>
   <title>Calculus: limit</title>
   <script src="./math_ml.js" charset="utf-8"></script>
+  <script src="./problems.js" charset="utf-8"></script>
   <style>
-    table, th, tr, td, mtable, mth, mtr, mtd {
+    table, th, tr, td {
       border: 1px solid black;
       font-family: "Asana Math", serif;
       font-size: 36px
@@ -30,68 +31,15 @@
     }
   </style>
   <script type="text/javascript">
-    const problems = [
-      ["lim (x->5) x^2", 25],
-      ["lim (x->1) (x+3)/(x+1)", 2],
-      ["lim (x->inf) 1/x", 0],
-      ["lim (x->-inf) 1/x", 0],
-      ["lim (x->1) 2/(x+1)", 1],
-      ["lim (x->1) (2x-2)/(x-1)", 2],
-      ["lim (x->0) (x^2566)/(x^2566)", 1],
-      ["lim (x->0) (x^2023)/(x^2023)", 1],
-      ["lim (x->inf) (x^2566)/(x^2566)", 1],
-      ["lim (x->inf) (x^2023)/(x^2023)", 1],
-      ["lim (x->-1) (x+1)/(x-1)", 0],
-      ["lim (x->0) (x-1)/(x^2)", Infinity],
-      ["lim (x->0) (x+1)/(1-x^2)", -Infinity],
-      ["lim (x->2) 10/(x+3)", 2],
-      ["lim (x->2) (x^2-4)/(x-2)", 4],
-      ["lim (x->-2) (x^2-4)/(x+2)", -4],
-      ["lim (x->0) 2^x", 1],
-      ["lim (x->0) 1/(x^2)", Infinity],
-      ["lim (x->inf) (x^2566)/(x^2023)", Infinity],
-      ["lim (x->inf) (x^2023)/(x^2566)", 0],
-      ["lim (x->0) (x^2566)/(x^2023)", 0],
-      ["lim (x->0) (x^2022)/(x^2566)", Infinity],
-    ]
-
-    function copy_text() {
-      // Get the text field
-      const copyText = document.getElementById("expression_text");
-
-      // Select the text field
-      copyText.select();
-      copyText.setSelectionRange(0, 99999); // For mobile devices
-
-      // Copy the text inside the text field
-      navigator.clipboard.writeText(copyText.value);
-      document.getElementById("copy_button").textContent = "copied!...";
-      setTimeout(() => {
-        document.getElementById("copy_button").textContent = "copy text";
-      }, 3000);
-    }
-
-    function beautify_exp() {
-      const new_ml_text = inlineMathToMathML(document.getElementById("expression").value);
-      document.getElementById("expression_ml").innerHTML = "<math>" + new_ml_text + "</math>";
-      document.getElementById("expression_text").textContent = "<math>" + new_ml_text + "</math>";
-    }
-
     function show_answer(id) {
       document.getElementById("answer_" + id).style.color = "black";
     }
 
     window.onload = function () {
-      //var final_problems = "<math><mtable><mtr><mtd><ms>problems</ms></mtd><mtd><ms>answers</ms></mtd></mtr>";
-      //for(var i = 0; i < problems.length; i++) {
-      //final_problems = final_problems + "<mtr><mtd>" + inlineMathToMathML(problems[i][0]) + "</mtd>";
-      //final_problems = final_problems + "<mtd><button onclick='show_answer("+i+")'/><mrow id='answer_"+i+"'" + problems[i][1] + "</mrow></mtd></mtr>";
-      //}
-      //final_problems = final_problems + "</mtable></math>";
       let final_problems = "<table><tr><th>problems</th><th>answers</th></tr>";
-      for (let i = 0; i < problems.length; i++) {
-        final_problems = final_problems + "<tr><td><math>" + inlineMathToMathML(problems[i][0]) + "</math></td>";
-        final_problems = final_problems + "<td><button onclick='show_answer(" + i + ")' ='show answer'>show answer</button><span id='answer_" + i + "' class='answer'>" + problems[i][1] + "</span></td></tr>";
+      for (let i = 0; i < limit_problems.length; i++) {
+        final_problems = final_problems + "<tr><td><math>" + inlineMathToMathML(limit_problems[i][0]) + "</math></td>";
+        final_problems = final_problems + "<td><button onclick='show_answer(" + i + ")' ='show answer'>show answer</button><span id='answer_" + i + "' class='answer'>" + limit_problems[i][1] + "</span></td></tr>";
       }
       final_problems = final_problems + "</table>";
       document.getElementById("expression_ml").innerHTML = final_problems;
