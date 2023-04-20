@@ -37,6 +37,7 @@ function inlineMathToMathML(text, integral_isunderover = true, from_isunderover 
   text = text.replace(/(?<!\w\w)(?<=[a-z])'/g, "<mo>&prime;</mo>");
   text = text.replace(/inf|&infin;/g, "∞");
   text = text.replace(/([+\-*→(),=])(?!')/g, "<mo>$1</mo>");
+  text = text.replace(/\-/g, "&minus;");
   text = text.replace(/(\d+|∞)/g, "<mn>$1</mn>");
   text = text.replace(/(?<![a-z])([a-z])(?![a-z])/g, "<mi>$1</mi>");
   text = text.replace(/(?<![a-z])d([a-z])(?![a-z])/g, "<ms>&nbsp;d</ms><mi>$1</mi>");
