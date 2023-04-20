@@ -27,9 +27,9 @@ function inlineMathToMathML(text, integral_isunderover = true, from_isunderover 
   while (text.indexOf("^") >= 0) {
     // has to do it this way because of how each open/close bracket has to be explicitly written in MathML
     text = text.replace(/\((.+?)\)\^\((.+?)\)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
-    text = text.replace(/\((.+?)\)\^([^+\-() ]+)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow>$2</mrow></msup>");
+    text = text.replace(/\((.+?)\)\^([\w\d+\-][^+\-() ]*)/g, "<msup><mrow><mo>(</mo>$1<mo>)</mo></mrow><mrow>$2</mrow></msup>");
     text = text.replace(/([^+\-() ]+)\^\((.+?)\)/g, "<msup><mrow>$1</mrow><mrow><mo>(</mo>$2<mo>)</mo></mrow></msup>");
-    text = text.replace(/([^+\-()<> ]+)\^([^+\-()<> ]+)/g, "<msup><mrow>$1</mrow><mrow>$2</mrow></msup>");
+    text = text.replace(/([^+\-()<> ]+)\^([\w\d+\-][^+\-()<> ]*)/g, "<msup><mrow>$1</mrow><mrow>$2</mrow></msup>");
   }
   text = text.replace(/(?:([^+\-() ]+)|\((.+?)\))(?<!<)\/(?:([^+\-() ]+)|\((.+?)\))/g, "<mfrac><mrow>$1$2</mrow><mrow>$3$4</mrow></mfrac>");
 
