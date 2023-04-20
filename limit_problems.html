@@ -16,14 +16,23 @@
       padding: 12px
     }
 
-    button, .answer {
+    button {
       font-family: "Asana Math", serif;
-      font-size: 36px
+      font-size: 36px;
+      width: 240px
     }
 
     .answer {
+      font-family: "Asana Math", serif;
+      font-size: 36px;
       color: white;
-      padding-left: 24px;
+    }
+
+    .question_cell, .answer_cell {
+      width: 480px;
+      height: 240px;
+      vertical-align: middle;
+      text-align: center;
     }
 
     .over, .under {
@@ -31,15 +40,32 @@
     }
   </style>
   <script type="text/javascript">
-    function show_answer(id) {
-      document.getElementById("answer_" + id).style.color = "black";
+    function toggle_answer(id, toggle_hide = false) {
+      if (toggle_hide || document.getElementById("answer_" + id).style.color === "black") {
+        document.getElementById("answer_" + id).style.color = "white";
+        document.getElementById("button_" + id).innerHTML = "show answer";
+      } else {
+        document.getElementById("answer_" + id).style.color = "black";
+        document.getElementById("button_" + id).innerHTML = "hide answer";
+      }
+    }
+
+    function next_question() {
+      const problem = limit_problems[Math.floor(Math.random() * limit_problems.length)];
+      toggle_answer("x", true);
+      document.getElementById("question_x").innerHTML = "<math>" + inlineMathToMathML(problem[0]) + "</math>";
+      document.getElementById("answer_x").innerHTML = problem[1];
+    }
+
+    function show_all() {
+      document.getElementById("expression_ml").style.display = "block";
     }
 
     window.onload = function () {
       let final_problems = "<table><tr><th>problems</th><th>answers</th></tr>";
       for (let i = 0; i < limit_problems.length; i++) {
-        final_problems = final_problems + "<tr><td><math>" + inlineMathToMathML(limit_problems[i][0]) + "</math></td>";
-        final_problems = final_problems + "<td><button onclick='show_answer(" + i + ")' ='show answer'>show answer</button><span id='answer_" + i + "' class='answer'>" + limit_problems[i][1] + "</span></td></tr>";
+        final_problems = final_problems + "<tr><td class='question_cell'><math>" + inlineMathToMathML(limit_problems[i][0]) + "</math></td>";
+        final_problems = final_problems + "<td class='answer_cell'><button id='button_" + i + "' onclick='toggle_answer(" + i + ")'>show answer</button><br><span id='answer_" + i + "' class='answer'>" + limit_problems[i][1] + "</span></td></tr>";
       }
       final_problems = final_problems + "</table>";
       document.getElementById("expression_ml").innerHTML = final_problems;
@@ -47,6 +73,24 @@
   </script>
 </head>
 <body>
-<span id="expression_ml"></span>
+<button onclick='next_question()'>next question</button>
+<table>
+  <tr>
+    <th>problems</th>
+    <th>answers</th>
+  </tr>
+  <tr>
+    <td class="question_cell" id="question_x">
+
+    </td>
+    <td class="answer_cell">
+      <button id="button_x" onclick='toggle_answer("x")'>show answer</button><br>
+      <span id='answer_x' class='answer'>______</span>
+    </td>
+  </tr>
+</table>
+<br>
+<button id="show_all" onclick='show_all()'>show all</button><br>
+<span id="expression_ml" style="display: none"></span>
 </body>
 </html>
