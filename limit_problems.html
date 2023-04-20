@@ -3,12 +3,26 @@
   <title>Calculus: limit</title>
   <script src="./math_ml.js" charset="utf-8"></script>
   <style>
-    table, th, tr, td {
-      border: 1px solid black
+    table, th, tr, td, mtable, mth, mtr, mtd {
+      border: 1px solid black;
+      font-family: "Asana Math", serif;
+      font-size: 36px
     }
 
     math {
-      font-family: "Asana Math", serif
+      font-family: "Asana Math", serif;
+      font-size: 72px;
+      padding: 12px
+    }
+
+    button, .answer {
+      font-family: "Asana Math", serif;
+      font-size: 36px
+    }
+
+    .answer {
+      color: white;
+      padding-left: 24px;
     }
 
     .over, .under {
@@ -55,7 +69,6 @@
       setTimeout(() => {
         document.getElementById("copy_button").textContent = "copy text";
       }, 3000);
-
     }
 
     function beautify_exp() {
@@ -64,47 +77,28 @@
       document.getElementById("expression_text").textContent = "<math>" + new_ml_text + "</math>";
     }
 
+    function show_answer(id) {
+      document.getElementById("answer_"+id).style.color = "black";
+    }
+
     window.onload = function () {
-      var final_problems = "";
-      var final_answers = "";
-      for(var i = 0; i < problems.length; i++) {
-        final_problems = final_problems + "<math>" + inlineMathToMathML(problems[i][0]) + "</math><br>"
-        final_answers = final_answers + problems[i][1] + "<br>"
+      //var final_problems = "<math><mtable><mtr><mtd><ms>problems</ms></mtd><mtd><ms>answers</ms></mtd></mtr>";
+      //for(var i = 0; i < problems.length; i++) {
+      //final_problems = final_problems + "<mtr><mtd>" + inlineMathToMathML(problems[i][0]) + "</mtd>";
+      //final_problems = final_problems + "<mtd><button onclick='show_answer("+i+")'/><mrow id='answer_"+i+"'" + problems[i][1] + "</mrow></mtd></mtr>";
+      //}
+      //final_problems = final_problems + "</mtable></math>";
+      let final_problems = "<table><tr><th>problems</th><th>answers</th></tr>";
+      for (let i = 0; i < problems.length; i++) {
+        final_problems = final_problems + "<tr><td><math>" + inlineMathToMathML(problems[i][0]) + "</math></td>";
+        final_problems = final_problems + "<td><button onclick='show_answer(" + i + ")' ='show answer'>show answer</button><span id='answer_" + i + "' class='answer'>" + problems[i][1] + "</span></td></tr>";
       }
+      final_problems = final_problems + "</table>";
       document.getElementById("expression_ml").innerHTML = final_problems;
     };
   </script>
 </head>
 <body>
-<table>
-  <tr>
-    <th style="width:300px">Problem</th>
-    <th style="width:300px">Answer</th>
-  </tr>
-  <tr>
-    <td rowspan="2">
-      <label for="expression"></label>
-      <textarea id="expression" style="width: 280px;height: 100px"
-                spellcheck="false">integral(x=0, 2) integral (y=1,4) lim(h->0) (f(x+h)-f(x))/h dy dx from(a=3,5)</textarea><br>
-      <input type="checkbox" id="integral_isunderover" checked/><label for="integral_isunderover">use under/over for
-      integral</label><br>
-      <input type="checkbox" id="from_isunderover" checked/><label for="from_isunderover">use under/over for evaluation
-      bound</label>
-    </td>
-    <td>
-      beautiful:
-      <span id="expression_ml"></span>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      MathML
-      <button id="copy_button" onclick="copy_text()">copy text</button>
-      <br> <label for="expression_text"></label><textarea id="expression_text" spellcheck="false"
-                                                          style="width: 100%; height: 100px" readonly></textarea>
-    </td>
-  </tr>
-</table>
-<button id="toggle_button" onclick="beautify_exp() ">beautify!</button>
+<span id="expression_ml"></span>
 </body>
 </html>
