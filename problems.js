@@ -2,7 +2,7 @@ const limit_problems = [
   ["lim (x->5) 0", 0],
   ["lim (x->2566) 2023", 2023],
   ["lim (x->99) -99", -99],
-  ["lim (x->inf) 123456789*x", Infinity],
+  ["lim (x->inf) 123456789x", Infinity],
   ["lim (x->inf) 123456789/x", 0],
   ["lim (x->inf) 123456789-x", -Infinity],
   ["lim (x->inf) 2^x", Infinity],
