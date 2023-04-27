@@ -55,6 +55,21 @@
       toggle_answer("x", true);
       document.getElementById("question_x").innerHTML = "<math>" + inlineMathToMathML(problem[0]) + "</math>";
       document.getElementById("answer_x").innerHTML = problem[1];
+      document.getElementById("feedback_x").innerHTML = "";
+      document.getElementById("answer_input_x").value = "";
+    }
+
+    function check_answer() {
+      document.getElementById("feedback_x").innerHTML = "";
+      if (document.getElementById("answer_input_x").value.trim() === document.getElementById("answer_x").innerHTML) {
+        document.getElementById("feedback_x").style.color = "green";
+        document.getElementById("feedback_x").innerHTML = "correct";
+      } else {
+        console.log(document.getElementById("answer_input_x").value.trim());
+        console.log(document.getElementById("answer_x").innerHTML);
+        document.getElementById("feedback_x").style.color = "red";
+        document.getElementById("feedback_x").innerHTML = "incorrect";
+      }
     }
 
     function show_all() {
@@ -84,13 +99,17 @@
 
     </td>
     <td class="answer_cell">
+      <input id='answer_input_x' style="width:300px;height:100px;font-size: 32px"/><br>
+      <button id='check_x' onclick='check_answer()'>check answer</button><br>
+      <span id='feedback_x'>&nbsp;&nbsp;&nbsp;</span><br>
       <button id="button_x" onclick='toggle_answer("x")'>show answer</button><br>
       <span id='answer_x' class='answer'>______</span>
     </td>
   </tr>
 </table>
 <br>
-<button id="show_all" onclick='show_all()'>show all</button><br>
+<button id="show_all" onclick='show_all()'>show all</button>
+<br>
 <span id="expression_ml" style="display: none"></span>
 </body>
 </html>
