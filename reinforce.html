@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reinforcement Learning Problem Example</title>
+    <style>
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+        }
+        .image-box {
+            text-align: center;
+	    width: 25%;
+	    display: inline-block;
+	    padding: 20px;
+	    vertical-align: top;
+        }
+        img {
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body style="font-size:32px">
+    <div class="image-container">
+	<div style="width:100%;text-align:center;">current sum = <span id="sum_numbers">0</span><br>
+current average = <span id="average_numbers">0</span><div>
+        <div class="image-box">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Old_wooden_door_Segovia_Spain.jpg" alt="Image 1" onclick="handleClick(2, 8, 'list1')" style="border:8px solid red">
+            <ul id="list1"></ul>
+        </div>
+        <div class="image-box">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Door_with_the_emblem_of_Francis_I_-_OA_5941_-_Louvre_%2801%29.jpg" alt="Image 2" onclick="handleClick(3, 6, 'list2')" style="border:8px solid green">
+            <ul id="list2"></ul>
+        </div>
+        <div class="image-box">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Fa%C3%A7ade_de_l%27H%C3%B4tel-Dieu_de_Beaune_-_porte_en_bois.jpg" alt="Image 3" onclick="handleClick(1, 9, 'list3')" style="border:8px solid blue">
+            <ul id="list3"></ul>
+        </div>
+    </div>
+
+    <script>
+	let currentSum = 0;
+	let currentCount = 0;
+        function generateRandomNumber(a, b) {
+            return Math.floor(Math.random() * (b - a + 1)) + a;
+        }
+
+        function handleClick(min, max, listId) {
+            const randomNumber = generateRandomNumber(min, max);
+	    currentSum += randomNumber;
+            currentCount++;
+            document.getElementById(listId).innerHTML = document.getElementById(listId).innerHTML + " " + randomNumber;
+            document.getElementById("sum_numbers").innerHTML = currentSum;
+            document.getElementById("average_numbers").innerHTML = (currentSum/currentCount).toFixed(2);
+
+        }
+    </script>
+</body>
+</html>
