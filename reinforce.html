@@ -29,18 +29,27 @@
 </head>
 <body style="font-size:32px">
     <div class="image-container">
-	<div style="width:100%;text-align:center;">current sum = <span id="sum_numbers">0</span><br>
-current average = <span id="average_numbers">0</span><div>
+	<div style="width:100%;text-align:center;">
+current sum = <span id="sum_numbers">0</span><br>
+current count = <span id="count_numbers">0</span><br>
+current average = <span id="average_numbers">0</span>
+<div>
         <div class="image-box">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Old_wooden_door_Segovia_Spain.jpg" alt="Image 1" onclick="handleClick(2, 8, 'list1')" style="border:8px solid red">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Old_wooden_door_Segovia_Spain.jpg" alt="Image 1" 
+onclick="handleClick(20, 80, 'list1')" style="border:12px solid red"><br>
+	    <span>avg 1 = </span><span id="avg1">0</span>
             <ul id="list1"></ul>
         </div>
         <div class="image-box">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Door_with_the_emblem_of_Francis_I_-_OA_5941_-_Louvre_%2801%29.jpg" alt="Image 2" onclick="handleClick(3, 6, 'list2')" style="border:8px solid green">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Door_with_the_emblem_of_Francis_I_-_OA_5941_-_Louvre_%2801%29.jpg" alt="Image 2" 
+onclick="handleClick(30, 75, 'list2')" style="border:12px solid green"><br>
+	    <span>avg 2 = </span><span id="avg2">0</span>
             <ul id="list2"></ul>
         </div>
         <div class="image-box">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Fa%C3%A7ade_de_l%27H%C3%B4tel-Dieu_de_Beaune_-_porte_en_bois.jpg" alt="Image 3" onclick="handleClick(1, 9, 'list3')" style="border:8px solid blue">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Fa%C3%A7ade_de_l%27H%C3%B4tel-Dieu_de_Beaune_-_porte_en_bois.jpg" alt="Image 3" 
+onclick="handleClick(10, 95, 'list3')" style="border:12px solid blue"><br>
+	    <span>avg 3 = </span><span id="avg3">0</span>
             <ul id="list3"></ul>
         </div>
     </div>
@@ -48,18 +57,29 @@ current average = <span id="average_numbers">0</span><div>
     <script>
 	let currentSum = 0;
 	let currentCount = 0;
+
+	let sums = {"list1": [0,0], "list2": [0,0], "list3":[0,0]};
+
         function generateRandomNumber(a, b) {
             return Math.floor(Math.random() * (b - a + 1)) + a;
         }
 
         function handleClick(min, max, listId) {
+            const limit = parseInt((new URLSearchParams(window.location.search)).get("limit") || 10);
+            if(currentCount >= limit) {
+                alert("no more doors!");
+            } else {
             const randomNumber = generateRandomNumber(min, max);
 	    currentSum += randomNumber;
             currentCount++;
             document.getElementById(listId).innerHTML = document.getElementById(listId).innerHTML + " " + randomNumber;
             document.getElementById("sum_numbers").innerHTML = currentSum;
+            document.getElementById("count_numbers").innerHTML = currentCount;
             document.getElementById("average_numbers").innerHTML = (currentSum/currentCount).toFixed(2);
-
+            sums[listId][0] += randomNumber;
+            sums[listId][1] ++;
+	    document.getElementById("avg"+listId.charAt(4)).innerHTML = (sums[listId][0]/sums[listId][1]).toFixed(2);
+            }
         }
     </script>
 </body>
