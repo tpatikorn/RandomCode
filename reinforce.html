@@ -59,13 +59,14 @@ onclick="handleClick(10, 95, 'list3')" style="border:12px solid blue"><br>
 	let currentCount = 0;
 
 	let sums = {"list1": [0,0], "list2": [0,0], "list3":[0,0]};
+        const limit = parseInt((new URLSearchParams(window.location.search)).get("limit") || 10);
+        document.getElementById("count_numbers").innerHTML = currentCount + " / " + limit;
 
         function generateRandomNumber(a, b) {
             return Math.floor(Math.random() * (b - a + 1)) + a;
         }
 
         function handleClick(min, max, listId) {
-            const limit = parseInt((new URLSearchParams(window.location.search)).get("limit") || 10);
             if(currentCount >= limit) {
                 alert("no more doors!");
             } else {
@@ -74,7 +75,7 @@ onclick="handleClick(10, 95, 'list3')" style="border:12px solid blue"><br>
             currentCount++;
             document.getElementById(listId).innerHTML = document.getElementById(listId).innerHTML + " " + randomNumber;
             document.getElementById("sum_numbers").innerHTML = currentSum;
-            document.getElementById("count_numbers").innerHTML = currentCount;
+            document.getElementById("count_numbers").innerHTML = currentCount + " / " + limit;
             document.getElementById("average_numbers").innerHTML = (currentSum/currentCount).toFixed(2);
             sums[listId][0] += randomNumber;
             sums[listId][1] ++;
