@@ -11,15 +11,21 @@
         }
         .image-box {
             text-align: center;
-	    width: 25%;
+	    width: 20%;
+            height: 100px;
 	    display: inline-block;
 	    padding: 20px;
 	    vertical-align: top;
         }
         img {
-            width: 200px;
-            height: 200px;
+            width: 50%;
+            height: 100%;
+            max-height: 100px;
+            max-width: 100px;
             cursor: pointer;
+            border: 5px solid black;
+            padding: 5px;
+            object-fit: cover;
         }
         ul {
             list-style-type: none;
@@ -27,29 +33,34 @@
         }
     </style>
 </head>
-<body style="font-size:32px">
+<body style="font-size:24px">
+    <div>
+        <button onclick="reset_score(10)">limit=10</button>
+        <button onclick="reset_score(30)">limit=30</button>
+        <button onclick="reset_score(50)">limit=50</button>
+    </div>
     <div class="image-container">
 	<div style="width:100%;text-align:center;">
 current sum = <span id="sum_numbers">0</span><br>
 current count = <span id="count_numbers">0</span><br>
-current average = <span id="average_numbers">0</span>
+current average = <span id="average_numbers">?</span>
 <div>
         <div class="image-box">
             <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Old_wooden_door_Segovia_Spain.jpg" alt="Image 1" 
-onclick="handleClick(20, 80, 'list1')" style="border:12px solid red"><br>
-	    <span>avg 1 = </span><span id="avg1">0</span>
+onclick="handleClick(20, 80, 'list1')" style="border-color:red"><br>
+	    <span>avg 1 = </span><span id="avg1">?</span>
             <ul id="list1"></ul>
         </div>
         <div class="image-box">
             <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Door_with_the_emblem_of_Francis_I_-_OA_5941_-_Louvre_%2801%29.jpg" alt="Image 2" 
-onclick="handleClick(30, 75, 'list2')" style="border:12px solid green"><br>
-	    <span>avg 2 = </span><span id="avg2">0</span>
+onclick="handleClick(30, 75, 'list2')" style="border-color:green"><br>
+	    <span>avg 2 = </span><span id="avg2">?</span>
             <ul id="list2"></ul>
         </div>
         <div class="image-box">
             <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Fa%C3%A7ade_de_l%27H%C3%B4tel-Dieu_de_Beaune_-_porte_en_bois.jpg" alt="Image 3" 
-onclick="handleClick(10, 95, 'list3')" style="border:12px solid blue"><br>
-	    <span>avg 3 = </span><span id="avg3">0</span>
+onclick="handleClick(10, 95, 'list3')" style="border-color:blue"><br>
+	    <span>avg 3 = </span><span id="avg3">?</span>
             <ul id="list3"></ul>
         </div>
     </div>
@@ -59,11 +70,27 @@ onclick="handleClick(10, 95, 'list3')" style="border:12px solid blue"><br>
 	let currentCount = 0;
 
 	let sums = {"list1": [0,0], "list2": [0,0], "list3":[0,0]};
-        const limit = parseInt((new URLSearchParams(window.location.search)).get("limit") || 10);
+        let limit = parseInt((new URLSearchParams(window.location.search)).get("limit") || 10);
         document.getElementById("count_numbers").innerHTML = currentCount + " / " + limit;
 
         function generateRandomNumber(a, b) {
             return Math.floor(Math.random() * (b - a + 1)) + a;
+        }
+        
+        function reset_score(new_limit) {
+            limit = new_limit;
+            currentSum = 0;
+            currentCount = 0;
+            sums = {"list1": [0,0], "list2": [0,0], "list3":[0,0]};
+            document.getElementById("list1").innerHTML = "";
+            document.getElementById("list2").innerHTML = "";
+            document.getElementById("list3").innerHTML = "";
+            document.getElementById("sum_numbers").innerHTML = currentSum;
+            document.getElementById("count_numbers").innerHTML = currentCount + " / " + limit;
+            document.getElementById("average_numbers").innerHTML = "?";
+	    document.getElementById("avg1").innerHTML = "?";
+	    document.getElementById("avg2").innerHTML = "?";
+	    document.getElementById("avg3").innerHTML = "?";
         }
 
         function handleClick(min, max, listId) {
