@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Sample from Google Sheets (Public)</title>
+    <style>
+        .random-string {
+            position: absolute;
+            font-size: 18px;
+            color: black;
+            padding: 10px;
+            border: 1px solid gray;
+            background-color: lightyellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Strings from Google Sheet</h1>
+    <div id="container"></div>
+
+    <script>
+        // URL to public Google Sheet as CSV
+        const SHEET_ID = '1US_0N-OuejJP6cKoLXpVEKyD_9rD_JJF6FIL9uLuOV0';  // Replace with your actual Sheet ID
+        const SHEET_NAME = 'Sheet1';  // Replace with your actual sheet name (or omit if default)
+        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+        // Utility function: Seed-based random generator (based on the date)
+        function seededRandom(seed) {
+            var x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
+        }
+
+        // Get the current date as a seed
+        function getSeedFromDate() {
+            const today = new Date();
+            return today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+        }
+
+        // Fetch CSV data from the public Google Sheet
+        async function fetchCSVData() {
+            const response = await fetch(SHEET_URL);
+            const csvText = await response.text();
+            return csvText.split('\n').map(row => row.trim()).filter(row => row.length > 0);
+        }
+
+        // Randomly place the strings on the page
+        function placeRandomStrings(strings) {
+            const container = document.getElementById('container');
+            container.innerHTML = ''; // Clear previous content
+
+            const seed = getSeedFromDate();
+            const numStrings = Math.floor(seededRandom(seed) * (15 - 5 + 1)) + 5;  // Select between 5 and 15
+
+            for (let i = 0; i < numStrings; i++) {
+                const randomIndex = Math.floor(seededRandom(seed + i) * strings.length);
+                const randomString = strings[randomIndex];
+
+                // Create a new div element for each string
+                const div = document.createElement('div');
+                div.className = 'random-string';
+                div.textContent = randomString;
+
+                // Set random positions
+                const randomX = Math.floor(seededRandom(seed + i + 1) * window.innerWidth * 0.9);  // Limit to 90% width
+                const randomY = Math.floor(seededRandom(seed + i + 2) * window.innerHeight * 0.9); // Limit to 90% height
+                div.style.left = randomX + 'px';
+                div.style.top = randomY + 'px';
+
+                // Append to container
+                container.appendChild(div);
+            }
+        }
+
+        // Main function to fetch data and place strings
+        async function main() {
+            try {
+                const strings = await fetchCSVData();
+                placeRandomStrings(strings);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Run the main function when the page loads
+        window.onload = main;
+    </script>
+</body>
+</html>
