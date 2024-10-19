@@ -39,9 +39,9 @@
         let seed = 0;
 
         const predeterminedPositions = [
-{top: 	100	, left: 	50	}, {top: 	100	, left: 	300	}, {top: 	100	, left: 	550	}, {top: 	100	, left: 	800	}, {top: 	100	, left: 	1050	}, 
-{top: 	330	, left: 	50	}, {top: 	330	, left: 	300	}, {top: 	330	, left: 	550	}, {top: 	330	, left: 	800	}, {top: 	330	, left: 	1050	}, 
-{top: 	560	, left: 	50	}, {top: 	560	, left: 	300	}, {top: 	560	, left: 	550	}, {top: 	560	, left: 	800	}, {top: 	560	, left: 	1050	}, 
+{top: 100, left: 50}, {top: 100, left: 300}, {top: 100, left: 550}, {top: 100, left: 800}, {top: 100, left: 1050}, 
+{top: 330, left: 50}, {top: 330, left: 300}, {top: 330, left: 550}, {top: 330, left: 800}, {top: 330, left: 1050}, 
+{top: 560, left: 50}, {top: 560, left: 300}, {top: 560, left: 550}, {top: 560, left: 800}, {top: 560, left: 1050}, 
 
         ];
 
@@ -151,6 +151,7 @@
         async function main() {
             const dateDisplay = document.getElementById("date-container");
             dateDisplay.innerHTML = `Rumors on ${getCurrentDate()}`;
+            document.title = `Rumors on ${getCurrentDate()}`;
 
             seed = getSeedFromDate();
             try {
