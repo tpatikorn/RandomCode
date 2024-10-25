@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paithon Programming Language</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; line-height: 1.6; }
+        h1 { color: #2D6A4F; }
+        h2 { color: #40916C; }
+        .button { background-color: #40916C; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 5px; }
+        .button:hover { background-color: #2D6A4F; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
+    </style>
+    <script>
+        let lang = 'th';
+        function switchLanguage() {
+            const content = {
+                en: {
+                    title: "Welcome to Paithon",
+                    intro: "<p>Welcome to <a href='https://github.com/tpatikorn/RandomCode/Paithon'>Paithon</a>, a groundbreaking programming language designed to redefine the way you think about coding. Paithon stands at the forefront of innovation, combining elegance with unparalleled efficiency, making it the ideal choice for both seasoned developers and those embarking on their coding journey. </p><p>With its intuitive syntax and powerful features, Paithon empowers you to bring your ideas to life with ease and creativity. It offers a seamless programming experience, allowing you to focus on solving complex problems without the burden of unnecessary complexity.</p><p>Imagine a language that not only enhances productivity but also fosters a vibrant community of developers who are passionate about collaboration and sharing knowledge. Paithon is more than just a language; it’s a movement toward a brighter, more accessible future in programming.</p><p>Join the Paithon revolution and unlock your potential as a creator. Embrace the power of Paithon today and transform the way you interact with technology!.</p>",
+                    install: "How to Install Paithon",
+                    installSteps: "1. Download the <a href='https://github.com/tpatikorn/RandomCode/Paithon'>files</a>.<br>2. Open Command Prompt.<br>3. Run Install-Paithon.bat.<br>4. Restart Command Prompt and type 'paithon' to run your scripts.",
+                    uninstall: "How to Uninstall Paithon",
+                    uninstallSteps: "1. Open Command Prompt.<br>2. Run Uninstall-Paithon.bat.<br>3. Restart Command Prompt.",
+                    langSwitch: "Switch to Thai"
+                },
+                th: {
+                    title: "ยินดีต้อนรับสู่ Paithon",
+                    intro: "<p>ยินดีต้อนรับสู่ <a href='https://github.com/tpatikorn/RandomCode/Paithon'>Paithon</a> ภาษาโปรแกรมที่ปฏิวัติวงการ ซึ่งออกแบบมาเพื่อเปลี่ยนแปลงวิธีการที่คุณคิดเกี่ยวกับการเขียนโค้ด Paithon อยู่ในแนวหน้าของนวัตกรรม โดยรวมความสง่างามเข้ากับประสิทธิภาพที่ไม่มีใครเทียบได้ ทำให้เป็นตัวเลือกที่เหมาะสมที่สุดสำหรับทั้งนักพัฒนาที่มีประสบการณ์และผู้ที่เริ่มต้นเส้นทางการเขียนโค้ด</p><p>ด้วยไวยากรณ์ที่เข้าใจง่ายและฟีเจอร์ที่ทรงพลัง Paithon ช่วยให้คุณสามารถนำไอเดียของคุณออกมาสู่ชีวิตได้อย่างง่ายดายและสร้างสรรค์ มันมอบประสบการณ์การเขียนโปรแกรมที่ไร้รอยต่อ ทำให้คุณสามารถมุ่งเน้นไปที่การแก้ปัญหาที่ซับซ้อนได้โดยไม่ต้องแบกรับความซับซ้อนที่ไม่จำเป็น</p><p>ลองจินตนาการถึงภาษาที่ไม่เพียงแต่ช่วยเพิ่มผลผลิต แต่ยังส่งเสริมให้เกิดชุมชนนักพัฒนาที่มีชีวิตชีวา ผู้ที่หลงใหลในการทำงานร่วมกันและแบ่งปันความรู้ Paithon เป็นมากกว่าภาษา มันคือการเคลื่อนไหวสู่อนาคตที่สดใสและเข้าถึงได้มากขึ้นในด้านการเขียนโปรแกรม</p><p>เข้าร่วมการปฏิวัติ Paithon และปลดล็อกศักยภาพของคุณในฐานะผู้สร้าง รับพลังของ Paithon วันนี้และเปลี่ยนแปลงวิธีที่คุณมีปฏิสัมพันธ์กับเทคโนโลยี!</p>",
+                    install: "วิธีการติดตั้ง Paithon",
+                    installSteps: "1. ดาวน์โหลด<a href='https://github.com/tpatikorn/RandomCode/Paithon'>ไฟล์</a><br>2. เปิด Command Prompt<br>3. รัน Install-Paithon.bat<br>4. รีสตาร์ท Command Prompt และพิมพ์ 'paithon' เพื่อรันสคริปต์ของคุณ",
+                    uninstall: "วิธีการถอนการติดตั้ง Paithon",
+                    uninstallSteps: "1. เปิด Command Prompt<br>2. รัน Uninstall-Paithon.bat<br>3. รีสตาร์ท Command Prompt",
+                    langSwitch: "เปลี่ยนเป็นภาษาอังกฤษ"
+                }
+            };
+            if(lang === 'en') { 
+                lang = 'th'; 
+            } else {
+                lang = 'en';
+            }
+            document.getElementById("title").innerHTML = content[lang].title;
+            document.getElementById("intro").innerHTML = content[lang].intro;
+            document.getElementById("install").innerHTML = content[lang].install;
+            document.getElementById("installSteps").innerHTML = content[lang].installSteps;
+            document.getElementById("uninstall").innerHTML = content[lang].uninstall;
+            document.getElementById("uninstallSteps").innerHTML = content[lang].uninstallSteps;
+            document.getElementById("langSwitch").innerHTML = content[lang].langSwitch;
+        }
+    </script>
+</head>
+<body onload="switchLanguage()">
+    <div class="header">
+        <h1 id="title">Welcome to Paithon</h1>
+        <button class="button" id="langSwitch" onclick="switchLanguage()">Switch to Thai</button>
+    </div>
+    <p id="intro">
+        <a href="https://github.com/tpatikorn/RandomCode/Paithon">Paithon</a> is a groundbreaking programming language based entirely on Python but with its own identity. Paithon provides the same syntax and functionality as Python, making it the perfect choice for those who want a Python-like experience with a unique twist.
+    </p>
+
+    <h2 id="install">How to Install Paithon</h2>
+    <p id="installSteps">1. Download the <a href="https://github.com/tpatikorn/RandomCode/Paithon">files</a>.<br>2. Open Command Prompt.<br>3. Run Install-Paithon.bat.<br>4. Restart Command Prompt and type 'paithon' to run your scripts.</p>
+
+    <h2 id="uninstall">How to Uninstall Paithon</h2>
+    <p id="uninstallSteps">1. Open Command Prompt.<br>2. Run Uninstall-Paithon.bat.<br>3. Restart Command Prompt.</p>
+
+</body>
+</html>
