@@ -1,5 +1,6 @@
 import itertools
 
+
 # return a dict mapping from m -> list of all possible vector combinations
 # where m is the length of the vectors
 def find_vector_combinations_all_m(c, s, n):
