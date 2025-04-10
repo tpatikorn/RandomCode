@@ -1,0 +1,8 @@
+ai/models/
+models/
+.env
+.idea
+.venv
+client_secret.json
+service_key.json
+ERP/generated_data/
