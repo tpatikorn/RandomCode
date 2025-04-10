@@ -9,7 +9,7 @@ dotenv.load_dotenv()
 
 xml_url = os.getenv("METER_XML")  # source XML
 sheet_id = os.getenv('SHEET_ID')  # destination Google Sheet ID
-credentials_path = 'service_key.json'  # Google credential file
+credentials_path = '../service_key.json'  # Google credential file
 
 print(xml_url)
 

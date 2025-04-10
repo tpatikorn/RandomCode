@@ -2,9 +2,9 @@ import itertools
 
 # return a dict mapping from m -> list of all possible vector combinations
 # where m is the length of the vectors
-def find_vector_combinations_all_m(c, s, n) -> Dict[int, List[List[str]]:
+def find_vector_combinations_all_m(c, s, n):
     result = {}
-    for _ in range(n+1):
+    for _ in range(n + 1):
         result[_] = []
     for i in range(2 ** n):
         digits = list(bin(i)[2:].zfill(n))  # zfill to front-pad with 0
@@ -19,6 +19,7 @@ def find_vector_combinations_all_m(c, s, n) -> Dict[int, List[List[str]]:
             vec = list(map(lambda _: c[digit_index[_]] if c_and_s[_] == '0' else s[digit_index[_]], range(m)))
             result[m].append(vec)
     return result
+
 
 def find_vector_combinations(c, s, n, m):
     result = {m: []}
@@ -35,6 +36,7 @@ def find_vector_combinations(c, s, n, m):
             vec = list(map(lambda _: c[digit_index[_]] if c_and_s[_] == '0' else s[digit_index[_]], range(m)))
             result[m].append(vec)
     return result
+
 
 c = ["c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7"]  # can provide more. n tells you to use the first n elements
 s = ["s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7"]

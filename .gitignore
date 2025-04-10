@@ -1,8 +1,8 @@
-ai/models/
+classes/ai/models/
 models/
 .env
 .idea
 .venv
 client_secret.json
 service_key.json
-ERP/generated_data/
+classes/ERP/generated_data/
