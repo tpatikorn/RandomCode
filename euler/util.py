@@ -6,6 +6,8 @@ __divisors = {1: set()}
 __primes = [2, 3]
 __highest_tested = 4
 __factor_chain = {1: [None, None]}
+__partition_with_max = {(1, 1): 1}
+__partition_with_max_prime = {(1, 1): 0}
 
 
 def is_palindrome(obj):
@@ -180,6 +182,37 @@ def digit_count(n: int):
     return len(str(n))
 
 
+def totient(n: int) -> int:
+    factors = set(factorize(n))
+    return totient_from_factors(n, factors)
+
+
+def totient_from_factors(n: int, prime_factors: set[int]) -> int:
+    val = n
+    for f in prime_factors:
+        val *= f - 1
+        val //= f
+    return val
+
+
+def count_partition(num, highest=None):
+    if num == 0 or num == 1 or highest == 1:
+        return 1
+
+    if highest is None or highest > num:
+        highest = num
+    if (num, highest) in __partition_with_max.keys():
+        return __partition_with_max[(num, highest)]
+
+    # print("calculating", num, highest)
+    result = count_partition(num - highest, highest) + count_partition(num, highest - 1)
+    __partition_with_max[(num, highest)] = result
+    return result
+
+
+# ---------------------- these are for testing stuff ------------------
+
+
 # comparison
 import timeit
 import random
@@ -200,19 +233,6 @@ def fun1():
         else:
             return n
     return s
-
-
-def totient(n: int) -> int:
-    factors = set(factorize(n))
-    return totient_from_factors(n, factors)
-
-
-def totient_from_factors(n: int, prime_factors: set[int]) -> int:
-    val = n
-    for f in prime_factors:
-        val *= f - 1
-        val //= f
-    return val
 
 
 def fun2():

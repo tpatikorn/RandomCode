@@ -39,6 +39,7 @@ def count_summation_prime(num, highest=None):
     return num_highest_count[(num, highest)]
 
 
+count_summation_prime(5)
 # this function include the sum of 1 number (for convenience of calculation)
 # the question ask for sum of at least 2 numbers, so subtract 1 from the answer
 for i in range(100):
