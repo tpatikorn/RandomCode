@@ -1,6 +1,7 @@
 import math
 from math import sqrt, inf, ceil, floor
 from typing import List
+import os
 
 __divisors = {1: set()}
 __primes = [2, 3]
@@ -21,6 +22,15 @@ def is_palindrome(obj):
 def is_prime(number):
     get_prime_list(limit=number)
     return number in __primes
+
+
+def get_euler_data_filepath(filename):
+    if "data" in os.listdir():
+        return os.path.join("data", filename)
+    elif "euler" in os.listdir():
+        return os.path.join("euler/data", filename)
+    else:
+        return os.path.join("../data", filename)
 
 
 # test using miller rabin test
