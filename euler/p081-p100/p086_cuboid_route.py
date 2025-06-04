@@ -1,31 +1,38 @@
 import math
 
-max_c = 100
+max_c = 2000
 
-triplets = set()
-for m in range(2, math.isqrt(max_c) + 1000):
-    for n in range(1, m):
-        if math.gcd(m, n) > 1:
-            continue
-        a = m * m - n * n
-        b = 2 * m * n
-        c = m * m + n * n
-        k = 1
-        while c * k <= max_c and b * k <= max_c:
-            trip = tuple(sorted([a * k, b * k, c * k]))
-            triplets.add(trip)
-            k += 1
+# the checkpoint lags behind by 1 but the solution print is correct since it's checked after the iteration
+LAST_BOUND_CHECKPOINT = {100: 1975,
+                         200: 8828,
+                         300: 21324,
+                         400: 39803,
+                         500: 63785,
+                         600: 93489,
+                         700: 130696,
+                         800: 174583,
+                         900: 224197,
+                         1000: 280308,
+                         1100: 343173,
+                         1200: 412759,
+                         1300: 491044,
+                         1400: 574748,
+                         1500: 666057,
+                         1600: 766235,
+                         1700: 868053,
+                         1800: 977031}
 
-print(triplets)
+last_bound_start = min(max(LAST_BOUND_CHECKPOINT.keys()), max_c)
+cuboid_count = LAST_BOUND_CHECKPOINT[last_bound_start]
 
-cuboid_count = 0
-for trip in triplets:
-    x, y, z = trip
-    if 2*x < y:
-        continue
-    elif x > y:
-        cuboid_count += y // 2
-    else:
-        cuboid_count += x - (y - 1) // 2
-
-print(len(triplets), cuboid_count)
+for last_bound in range(last_bound_start, max_c + 1, 1):
+    print(last_bound, cuboid_count)
+    for m1 in range(1, last_bound + 1):
+        for m2 in range(m1, last_bound + 1):
+            for m3 in range(max(last_bound, m2), last_bound + 1):
+                cuboid_len_squared = (m3 ** 2) + ((m1 + m2) ** 2)
+                if math.isqrt(cuboid_len_squared) ** 2 == cuboid_len_squared:
+                    cuboid_count += 1
+    if cuboid_count > 1_000_000:
+        print(last_bound, cuboid_count)
+        break
