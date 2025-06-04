@@ -1,9 +1,17 @@
+numpy
 pandas
 Pillow
 pythainlp
 easyocr
 pytesseract
 PyMuPDF
+tqdm
+regex
+keras
+keras_cv
+torch
+dotenv
+gspread
+google-auth
 
-# for key logger
-pynput
+

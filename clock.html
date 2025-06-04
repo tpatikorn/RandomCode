@@ -1,0 +1,122 @@
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+</head>
+<body>
+<p style="font-size:36px;font-family: 'Sarabun', sans-serif;">
+
+<script>
+let doMsecs = false;
+$(document).ready(function() {
+let lastKnownEndTime = new Date();
+lastKnownEndTime.setHours(lastKnownEndTime.getHours() + 2);
+lastKnownEndTime.setMinutes(Math.floor(lastKnownEndTime.getMinutes()/30)*30);
+lastKnownEndTime.setSeconds(0);
+$("#end_time").val(lastKnownEndTime.toLocaleString());
+
+$("#doMsecs").on("click", function() {
+  doMsecs = !doMsecs;
+  if(doMsecs) {
+    $("#doMsecs").val("hide msecs");
+  } else {
+    $("#doMsecs").val("show msecs");
+  }
+});
+
+$("#plus15min").on("click", function() {
+  lastKnownEndTime.setMinutes(lastKnownEndTime.getMinutes() + 15);
+  $("#end_time").val(lastKnownEndTime.toLocaleString());
+  clearInterval(flasher);
+  flasher = null;
+  $("#box").css("border-color", 'rgb(0, 0, 0)');
+});
+
+$("#minus15min").on("click", function() {
+  lastKnownEndTime.setMinutes(lastKnownEndTime.getMinutes() - 15);
+  $("#end_time").val(lastKnownEndTime.toLocaleString());
+});
+
+$("#end_time").on("input", function() {
+  const newEndTime = new Date($("#end_time").val());
+  if(!isNaN(newEndTime)) {
+    lastKnownEndTime = newEndTime;
+  }
+});
+
+
+function updateTime() {
+	let now = new Date(); 
+	let td = (lastKnownEndTime - now) / 1000;
+	if(!doMsecs) {
+		td = Math.ceil(td);
+	}
+        if(td < 0) {
+          td = 0;
+          if(!flasher) {
+            flasher = setInterval(flash, 500);
+          }
+        }
+	const hr = Math.floor(td/3600);
+	td = td - (hr * 3600);
+	const min = Math.floor(td/60);
+	td = td - (min * 60);
+
+	document.getElementById("end_time_display").innerHTML = `${lastKnownEndTime.getHours()}:${lastKnownEndTime.getMinutes().toString().padStart(2, "0")}:${lastKnownEndTime.getSeconds().toString().padStart(2, "0")}`;
+
+	if(doMsecs) {
+	document.getElementById("time").innerHTML = `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}.${now.getMilliseconds().toString().padStart(3, "0")}`;
+	document.getElementById("time_delta").innerHTML = `${hr} ชั่วโมง ${min.toString().padStart(2, "0")} นาที ${td.toFixed(3).toString().padStart(6, "0")} วินาที`;
+	} 
+	else {
+	document.getElementById("time").innerHTML = `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`;
+	document.getElementById("time_delta").innerHTML = `${hr} ชั่วโมง ${min.toString().padStart(2, "0")} นาที ${td.toFixed(0).toString().padStart(2, "0")} วินาที`;
+	}
+}
+
+function flash() {
+  if($("#box").css("border-color") == 'rgb(0, 0, 0)') {
+    $("#box").css("border-color", 'rgb(255, 0, 0)');
+  } else {
+    $("#box").css("border-color", 'rgb(0, 0, 0)');
+  }
+}
+        
+var task = setInterval(updateTime, 7);
+var flasher = null;
+
+});
+
+</script>
+<div style="padding:5px">
+
+<div class="mb-3 d-inline-flex" style="min-height:50px">
+  <label for="end_time" class="form-label" style="width:100px;margin:auto">End Time: </label>
+  <input type="text" class="form-control" id="end_time">
+</div>
+<input type="button" value="+15 minutes" id="plus15min"/ class="btn btn-primary" style=";margin:auto"> 
+<input type="button" value="-15 minutes" id="minus15min"/ class="btn btn-primary" style=";margin:auto"> 
+
+<div class="form-check-inline form-switch" style="width:130px">
+  <input class="form-check-input" type="checkbox" role="switch" id="doMsecs">
+  <label class="form-check-label" for="doMsecs">show msecs</label>
+</div>
+</div>
+<div id="box" style="padding: 1em; margin: auto; border: 10px solid black; text-align: center">
+<h1>
+สิ้นสุดเวลา: <code id="end_time_display"></code><br>
+ขณะนี้เวลา: <code id="time"></code><br>
+เหลือเวลา: <code id="time_delta"> </code>
+<h5>
+เปิด internet ได้ ใช้ ChatGPT และ AI ผู้ช่วยอื่นๆได้ ห้ามลอกกัน ห้ามปรึกษาคนอื่น<br>
+หากมีคำถามหรือปัญหา ถามผมได้ทันที</h5>
+</div>
+<div style="text-align: center;margin: auto; ">
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tHRm22e2kyc?si=__idKQBgD4KvmpLs"  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+</p>
+</body>
+<html>

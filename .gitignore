@@ -1,5 +1,12 @@
 /img/
 /pdf/
 /text/
+classes/ai/models/
+models/
+.env
 .idea
 /mockup_company/*.csv
+.venv
+client_secret.json
+service_key.json
+classes/ERP/generated_data/

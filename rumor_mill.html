@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Rumors from Google Sheet (Public)</title>
+    <style>
+        #grid-container {
+            display: inline-grid;
+            grid-template-columns: auto auto auto auto;
+            font-style: italic;
+        }
+
+        .rumor-box {
+            width: 280px;
+            height: 240px;
+            color: black;
+            padding: 24% 20px 10px;
+            word-wrap: break-word;
+            background-image: url("scroll.png");
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            background-size: 100% 100%;
+        }
+
+        .author {
+            margin: 1em 3em;
+        }
+
+        .rumor {
+            display: inline-block;
+            margin: 1em 3em;
+        }
+
+        .trustworthy {
+            margin: 1em 3em;
+        }
+    </style>
+</head>
+<body>
+<h1 id='date-container'>Random Rumors [TODAY]</h1>
+<div id="grid-container"></div>
+
+<script>
+    const MAX_RUMORS = 16;
+    const SHEET_ID = '1US_0N-OuejJP6cKoLXpVEKyD_9rD_JJF6FIL9uLuOV0';  // Replace with your actual Sheet ID
+    const SHEET_NAME = 'Sheet1';  // Replace with your actual sheet name (or omit if default)
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+    let seed = 0;
+
+    // Utility function: Seed-based random generator (based on the date)
+    function seededRandom() {
+        let x = Math.sin(seed) * 10000;
+        seed++;
+        return x - Math.floor(x);
+    }
+
+    function getCurrentDate() {
+        const date = new Date();
+        return date.toDateString();
+    }
+
+    // Get the current date as a seed
+    function getSeedFromDate() {
+        const today = new Date();
+        return today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    }
+
+    // Fetch CSV data from the public Google Sheet
+    async function fetchCSVData() {
+        const response = await fetch(SHEET_URL);
+        const csvText = await response.text();
+        const data = csvText.split('\n').map(row => row.trim()).filter(row => row.length > 0);
+        // remove header row, slice off the first/last quote marks, then split by "," (3 chars)
+        const rumors = data.slice(1).map((s) => s.slice(1, -1).split('","'));
+        const today = Math.floor(Date.now() / (24 * 60 * 60 * 1000));
+        return rumors.filter((r) => r[4] !== "Completed" && r[4] !== "Retired")
+            .filter((r) => today - Math.floor(Date.parse(r[0]) / (24 * 60 * 60 * 1000)) > 0);
+    }
+
+    function shuffle(array) {
+        let currentIndex = array.length;
+
+        // While there remain elements to shuffle...
+        while (currentIndex !== 0) {
+            // Pick a remaining element...
+            let randomIndex = Math.floor(seededRandom() * currentIndex);
+            currentIndex--;
+
+            // And swap it with the current element.
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+    }
+
+    function postRumor(rumor, pos, empty = false) {
+        const container = document.getElementById('grid-container');
+        const div = container.children[pos];
+
+        div.className = 'rumor-box';
+        if (empty) {
+            rumor[2] = "[The rumor is in a language you don't understand]";
+            div.className = 'rumor-box empty';
+        }
+
+        const author = rumor[1].length > 0 ? rumor[1] : "Anonymous";
+        const trustworthy = rumor[3].length > 0 ? `<span class="trustworthy">Trustworthy: ${rumor[3]}</span>` : "";
+        div.innerHTML = `<span class="author">${author}:</span><span class="rumor">${rumor[2]}</span>${trustworthy}`;
+    }
+
+    // Randomly select and place rumors into predetermined positions
+    function placeRandomRumors(rumors) {
+        const numRumors = Math.floor(seededRandom() * (MAX_RUMORS - 5 + 1)) + 5;  // Select between 5 and MAX_RUMORS
+        let positions = [...Array(MAX_RUMORS).keys()];
+
+        shuffle(rumors);
+        shuffle(positions);
+
+        const important_rumors = rumors.filter((r) => r[4] === "Important");
+        const normal_rumors = rumors.filter((r) => r[4] === "Normal");
+
+        for (let i = 0; i < important_rumors.length; i++) {
+            postRumor(important_rumors[i], positions[i]);
+        }
+
+        for (let i = important_rumors.length; i < numRumors; i++) {
+            postRumor(normal_rumors[i], positions[i]);
+        }
+
+        for (let i = numRumors; i < positions.length; i++) {
+            postRumor(["", "", "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;", "", ""], positions[i], true);
+        }
+    }
+
+    // Main function to fetch data and place rumors
+    async function main() {
+        const dateDisplay = document.getElementById("date-container");
+        dateDisplay.innerHTML = `Rumors on ${getCurrentDate()}`;
+        document.title = `Rumors on ${getCurrentDate()}`;
+
+        const container = document.getElementById('grid-container');
+
+        for (let i = 0; i < MAX_RUMORS; i++) {
+            const div = document.createElement('div');
+            div.className = 'rumor-box';
+            div.innerText = `${i}`;
+            container.appendChild(div);
+        }
+
+        seed = getSeedFromDate();
+        try {
+            const strings = await fetchCSVData();
+            placeRandomRumors(strings);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    // Run the main function when the page loads
+    window.onload = main;
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .table-container {
+            display: table;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .row {
+            display: table-row;
+        }
+        .cell {
+            display: table-cell;
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+        .cell:first-child {
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            min-width: 100px;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .remove-button {
+            background-color: #DC3545;
+        }
+        .remove-button:hover {
+            background-color: #a71c2d;
+        }
+        .footnote {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+    <script>
+        function addClass() {
+            const table = document.getElementById("class-table-body");
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td><textarea placeholder="Class details"></textarea></td>
+                <td><input type="number" min="0" value="3" onchange="recalculate()" style="width:50px"></td>
+                <td>
+                    <select onchange="recalculate()">
+                        <option value="4">A</option>
+                        <option value="3.5">B+</option>
+                        <option value="3">B</option>
+                        <option value="2.5">C+</option>
+                        <option value="2">C</option>
+                        <option value="1.5">D+</option>
+                        <option value="1">D</option>
+                        <option value="0">F</option>
+                    </select>
+                </td>
+                <td>
+                    <select onchange="recalculate()">
+                        <option value="">---</option>
+                        <option value="4">A</option>
+                        <option value="3.5">B+</option>
+                        <option value="3">B</option>
+                        <option value="2.5">C+</option>
+                        <option value="2">C</option>
+                        <option value="1.5">D+</option>
+                        <option value="1">D</option>
+                        <option value="0">F</option>
+                    </select>
+                </td>
+                <td><button class="button remove-button" onclick="removeClass(this)">Remove</button></td>
+            `;
+            table.appendChild(row);
+            recalculate();
+        }
+
+        function removeClass(button) {
+            const row = button.parentNode.parentNode;
+            row.remove();
+            recalculate();
+        }
+
+        function recalculate() {
+            const classes = document.getElementById("class-table-body").getElementsByTagName("tr");
+            let studentName = document.getElementById("studentName").value || "";
+            let totalCredits = parseFloat(document.getElementById("currentCredits").value) || 0;
+            let totalPoints = parseFloat(document.getElementById("currentGPAC").value) || 0;
+
+            let currentGPA = totalCredits > 0 ? totalPoints / totalCredits : 0;
+            let currentGPAFloor = Math.floor(currentGPA * 100) / 100;
+            const currentGPAText = `${currentGPAFloor.toFixed(4)} (ก่อนปัด ${currentGPA.toFixed(4)})`;
+
+            for (let row of classes) {
+                const credits = parseFloat(row.cells[1].querySelector("input").value);
+                const grade = parseFloat(row.cells[2].querySelector("select").value);
+                const previousGrade = row.cells[3].querySelector("select").value;
+
+                // Handle previous grade
+                if (previousGrade && previousGrade !== "---") {
+                    totalPoints -= credits * parseFloat(previousGrade); // Subtract old points
+                } else {
+                    totalCredits += credits; // Add credits only for new classes
+                }
+
+                // Add new points
+                totalPoints += credits * grade;
+            }
+
+            let newGPA = totalCredits > 0 ? totalPoints / totalCredits : 0;
+            let newGPAFloor = Math.floor(newGPA * 100) / 100;
+            const newGPAText = `${newGPAFloor.toFixed(4)} (ก่อนปัด ${newGPA.toFixed(4)})`;
+
+            document.getElementById("currentGPA").textContent = currentGPAText;
+            document.getElementById("studentNameNew").textContent = studentName;
+            document.getElementById("totalCreditsNew").textContent = totalCredits;
+            document.getElementById("GPACNew").textContent = totalPoints.toFixed(2);
+            document.getElementById("GPA").textContent = newGPAText;
+        }
+    </script>
+</head>
+<body>
+    <h1>Student Grade Calculator</h1>
+    <div class="table-container">
+        <div class="row">
+            <div class="cell">ชื่อ นศ:</div>
+            <div class="cell"><input type="text" id="studentName" placeholder="Enter name" onchange="recalculate()"></div>
+            <div class="cell"></div>
+            <div class="cell">คะแนนรวมสะสม:</div>
+            <div class="cell"><input type="number" id="currentGPAC" value="0" onchange="recalculate()"></div>
+        </div>
+        <div class="row">
+            <div class="cell">หน่วยกิตรวมสะสม:</div>
+            <div class="cell"><input type="number" id="currentCredits" value="0" onchange="recalculate()"></div>
+            <div class="cell"></div>
+            <div class="cell">GPA:</div>
+            <div class="cell" id="currentGPA">0.00</div>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width:200px">Class Details</th>
+                <th>Credits</th>
+                <th>Grade</th>
+                <th>Previous Grade</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="class-table-body">
+        </tbody>
+    </table>
+    <button class="button" onclick="addClass()">Add Class</button>
+    <hr>
+    <div class="table-container">
+        <div class="row">
+            <div class="cell">ชื่อ นศ:</div>
+            <div class="cell" id="studentNameNew"></div>
+            <div class="cell"></div>
+            <div class="cell">คะแนนรวมใหม่:</div>
+            <div class="cell" id="GPACNew">0.00</div>
+        </div>
+        <div class="row">
+            <div class="cell">หน่วยกิตรวมใหม่:</div>
+            <div class="cell" id="totalCreditsNew">0</div>
+            <div class="cell"></div>
+            <div class="cell">GPA:</div>
+            <div class="cell" id="GPA">0.00</div>
+        </div>
+    </div>
+    <div class="footnote">
+        <p>คะแนนรวม (GPAC) คือ ผลรวมของคะแนนของทุกรายวิชา <br>คะแนน หมายถึง ผลคูณของเกรดและหน่วยกิตของวิชานั้นๆ เช่น วิชา 3 หน่วยกิต (3.5) จะได้คะแนนเท่ากับ 10.5<br> การนับหน่วยกิตรวม ทุกวิชา รวมวิชาที่ได้ F ด้วย <br> ในการ regrade ให้ใส่เกรดเดิมในช่อง previous grade เพื่อให้ค่า GPAC มีการ update อย่างถูกต้อง</p>
+    </div>
+</body>
+</html>
