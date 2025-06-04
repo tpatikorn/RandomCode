@@ -1,0 +1,9 @@
+pandas
+Pillow
+pythainlp
+easyocr
+pytesseract
+PyMuPDF
+
+# for key logger
+pynput
