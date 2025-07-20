@@ -29,9 +29,9 @@
 
   <script>
     let intervalId = null;
-
+    
     function fetchAndRender() {
-      const url = document.getElementById('sheetUrl').value;
+      const url = document.getElementById('sheetUrl').value.replace(/\/edit.*$/, '/export?format=csv');
       const col = document.getElementById('columnName').value.trim();
 
       if (!url || !col) return alert('Please provide both URL and column name.');
