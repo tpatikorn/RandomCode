@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Google Sheet Word Cloud</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.5/build/d3.layout.cloud.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #cloud { width: 800px; height: 500px; border: 1px solid #ccc; }
+    input, select, button { margin: 5px; padding: 5px; }
+  </style>
+</head>
+<body>
+  <h2>Google Sheet Word Cloud Generator</h2>
+  <label>Google Sheet CSV URL:</label>
+  <input id="sheetUrl" type="text" size="60" placeholder="Paste public CSV export URL here" />
+  <label>Column Name:</label>
+  <input id="columnName" type="text" placeholder="e.g. Comments" />
+  <br>
+  <label>Live Update:</label>
+  <select id="liveToggle">
+    <option value="off">Manual</option>
+    <option value="on">Live (5s)</option>
+  </select>
+  <button onclick="fetchAndRender()">Refresh</button>
+
+  <div id="cloud"></div>
+
+  <script>
+    let intervalId = null;
+
+    function fetchAndRender() {
+      const url = document.getElementById('sheetUrl').value;
+      const col = document.getElementById('columnName').value.trim();
+
+      if (!url || !col) return alert('Please provide both URL and column name.');
+
+      fetch(url)
+        .then(res => res.text())
+        .then(csv => {
+          const rows = csv.split('\n').map(row => row.split(','));
+          const headers = rows[0];
+          const colIndex = headers.indexOf(col);
+
+          if (colIndex === -1) return alert('Column not found.');
+
+          const words = rows.slice(1)
+            .map(r => r[colIndex])
+            .filter(Boolean)
+            .join(' ')
+            .split(/\s+/);
+
+          const frequency = {};
+          words.forEach(w => {
+            const cleaned = w.toLowerCase().replace(/[^\w]/g, '');
+            if (cleaned) frequency[cleaned] = (frequency[cleaned] || 0) + 1;
+          });
+
+          const wordArray = Object.entries(frequency).map(([text, size]) => ({ text, size: 10 + size * 5 }));
+
+          renderCloud(wordArray);
+        });
+    }
+
+    function renderCloud(words) {
+      d3.select("#cloud").selectAll("*").remove();
+
+      const layout = d3.layout.cloud()
+        .size([800, 500])
+        .words(words)
+        .padding(5)
+        .rotate(() => ~~(Math.random() * 2) * 90)
+        .fontSize(d => d.size)
+        .on("end", draw);
+
+      layout.start();
+
+      function draw(words) {
+        d3.select("#cloud")
+          .append("svg")
+          .attr("width", 800)
+          .attr("height", 500)
+          .append("g")
+          .attr("transform", "translate(400,250)")
+          .selectAll("text")
+          .data(words)
+          .enter().append("text")
+          .style("font-size", d => d.size + "px")
+          .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
+          .attr("text-anchor", "middle")
+          .attr("transform", d => `translate(${d.x},${d.y}) rotate(${d.rotate})`)
+          .text(d => d.text);
+      }
+    }
+
+    document.getElementById('liveToggle').addEventListener('change', function () {
+      clearInterval(intervalId);
+      if (this.value === 'on') {
+        intervalId = setInterval(fetchAndRender, 5000);
+      }
+    });
+  </script>
+</body>
+</html>
