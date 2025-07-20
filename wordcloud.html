@@ -39,7 +39,7 @@
       fetch(url)
         .then(res => res.text())
         .then(csv => {
-          const rows = csv.split('\n').trim().map(row => row.split(','));
+          const rows = csv.split('\n').map(row => row.trim().split(','));
           const headers = rows[0];
           const colIndex = headers.indexOf(col);
 
