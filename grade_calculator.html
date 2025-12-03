@@ -8,44 +8,55 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            max-width: 800px;
+            max-width: 80%;
         }
+
         h1 {
             text-align: center;
             color: #333;
         }
+
         .table-container {
             display: table;
             width: 100%;
             margin-bottom: 20px;
         }
+
         .row {
             display: table-row;
         }
+
         .cell {
             display: table-cell;
             padding: 8px;
             border-bottom: 1px solid #ccc;
+            width: 20%;
         }
+
         .cell:first-child {
             font-weight: bold;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
+
         table, th, td {
             border: 1px solid #ccc;
         }
+
         th, td {
             padding: 8px;
             text-align: left;
             min-width: 100px;
         }
+
         th {
             background-color: #f4f4f4;
         }
+
         .button {
             background-color: #007BFF;
             color: white;
@@ -54,22 +65,33 @@
             cursor: pointer;
             border-radius: 3px;
         }
+
         .button:hover {
             background-color: #0056b3;
         }
+
         .remove-button {
             background-color: #DC3545;
         }
+
         .remove-button:hover {
             background-color: #a71c2d;
         }
+
         .footnote {
             margin-top: 20px;
             font-size: 0.9em;
             color: #555;
         }
+
+        input[type="number"] {
+            width: 50%;
+        }
     </style>
     <script>
+        const allMode = ["knowPoint", "knowGPA"];
+        let mode = "knowPoint";
+
         function addClass() {
             const table = document.getElementById("class-table-body");
             const row = document.createElement("tr");
@@ -114,95 +136,136 @@
             recalculate();
         }
 
+        function changeMode(newMode) {
+            if (allMode.includes(newMode)) {
+                mode = newMode;
+            }
+            recalculate();
+        }
+
         function recalculate() {
             const classes = document.getElementById("class-table-body").getElementsByTagName("tr");
             let studentName = document.getElementById("studentName").value || "";
-            let totalCredits = parseFloat(document.getElementById("currentCredits").value) || 0;
-            let totalPoints = parseFloat(document.getElementById("currentGPAC").value) || 0;
+            let currentCredit = parseFloat(document.getElementById("currentCredit").value) || 0;
+            let currentPoint = parseFloat(document.getElementById("currentPoint").value) || 0;
+            let currentGPA = parseFloat(document.getElementById("currentGPA").value) || 0;
+            let creditSU = (document.getElementById("su_prep").checked ? 1 : 0) +
+                (document.getElementById("su_coop").checked ? 3 : 0);
 
-            let currentGPA = totalCredits > 0 ? totalPoints / totalCredits : 0;
-            let currentGPAFloor = Math.floor(currentGPA * 100) / 100;
-            const currentGPAText = `${currentGPAFloor.toFixed(4)} (ก่อนปัด ${currentGPA.toFixed(4)})`;
+            let gradedCredit = currentCredit - creditSU;
+
+            if (mode === "knowPoint") {
+                currentGPA = gradedCredit > 0 ? currentPoint / gradedCredit : 0;
+                currentGPAFloor = Math.floor(currentGPA * 100) / 100;
+                currentGPANote = `(ก่อนปัด ${currentGPA.toFixed(4)})`;
+                document.getElementById("currentGPA").value = currentGPAFloor.toFixed(4);
+                document.getElementById("currentGPANote").textContent = currentGPANote;
+                document.getElementById("currentPointNote").textContent = "";
+            }
+            if (mode === "knowGPA") {
+                const currentPointFloor = Math.floor(currentGPA * gradedCredit * 2) / 2;
+                const currentPointCeil = Math.ceil(currentGPA * gradedCredit * 2) / 2;
+                currentPoint = currentPointCeil;
+                document.getElementById("currentPoint").value = currentPoint.toFixed(4);
+                document.getElementById("currentPointNote").textContent = `${currentPointFloor} - ${currentPointCeil}`;
+                document.getElementById("currentGPANote").textContent = "";
+            }
+
+            let newPoint = currentPoint;
+            let newCredit = gradedCredit;
 
             for (let row of classes) {
-                const credits = parseFloat(row.cells[1].querySelector("input").value);
-                const grade = parseFloat(row.cells[2].querySelector("select").value);
+                const thisCredit = parseFloat(row.cells[1].querySelector("input").value);
+                const thisGrade = parseFloat(row.cells[2].querySelector("select").value);
                 const previousGrade = row.cells[3].querySelector("select").value;
 
                 // Handle previous grade
                 if (previousGrade && previousGrade !== "---") {
-                    totalPoints -= credits * parseFloat(previousGrade); // Subtract old points
+                    newPoint -= thisCredit * parseFloat(previousGrade); // Subtract old points to remove old grades
+                    // does not add new credits
                 } else {
-                    totalCredits += credits; // Add credits only for new classes
+                    newCredit += thisCredit; // Add credits only for new classes
                 }
 
                 // Add new points
-                totalPoints += credits * grade;
+                newPoint += thisCredit * thisGrade;
             }
 
-            let newGPA = totalCredits > 0 ? totalPoints / totalCredits : 0;
+            let newGPA = newCredit > 0 ? newPoint / newCredit : 0;
             let newGPAFloor = Math.floor(newGPA * 100) / 100;
             const newGPAText = `${newGPAFloor.toFixed(4)} (ก่อนปัด ${newGPA.toFixed(4)})`;
 
-            document.getElementById("currentGPA").textContent = currentGPAText;
-            document.getElementById("studentNameNew").textContent = studentName;
-            document.getElementById("totalCreditsNew").textContent = totalCredits;
-            document.getElementById("GPACNew").textContent = totalPoints.toFixed(2);
-            document.getElementById("GPA").textContent = newGPAText;
+            document.getElementById("newStudentName").textContent = studentName;
+            document.getElementById("newCredit").textContent = newCredit + creditSU;
+            document.getElementById("newPoint").textContent = newPoint.toFixed(2);
+            document.getElementById("newGPA").textContent = newGPAText;
         }
     </script>
 </head>
 <body>
-    <h1>Student Grade Calculator</h1>
-    <div class="table-container">
-        <div class="row">
-            <div class="cell">ชื่อ นศ:</div>
-            <div class="cell"><input type="text" id="studentName" placeholder="Enter name" onchange="recalculate()"></div>
-            <div class="cell"></div>
-            <div class="cell">คะแนนรวมสะสม:</div>
-            <div class="cell"><input type="number" id="currentGPAC" value="0" onchange="recalculate()"></div>
-        </div>
-        <div class="row">
-            <div class="cell">หน่วยกิตรวมสะสม:</div>
-            <div class="cell"><input type="number" id="currentCredits" value="0" onchange="recalculate()"></div>
-            <div class="cell"></div>
-            <div class="cell">GPA:</div>
-            <div class="cell" id="currentGPA">0.00</div>
-        </div>
+<h1>Student Grade Calculator</h1>
+<div class="table-container">
+    <div class="row">
+        <div class="cell">ชื่อ นศ:</div>
+        <div class="cell"><input type="text" id="studentName" placeholder="Enter name" onchange="recalculate()"></div>
+        <div class="cell">คะแนนรวมปัจจุบัน:</div>
+        <div class="cell"><input type="number" id="currentPoint" value="0" onchange="changeMode('knowPoint')"></div>
+        <div class="cell" id="currentPointNote"></div>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th style="width:200px">Class Details</th>
-                <th>Credits</th>
-                <th>Grade</th>
-                <th>Previous Grade</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="class-table-body">
-        </tbody>
-    </table>
-    <button class="button" onclick="addClass()">Add Class</button>
-    <hr>
-    <div class="table-container">
-        <div class="row">
-            <div class="cell">ชื่อ นศ:</div>
-            <div class="cell" id="studentNameNew"></div>
-            <div class="cell"></div>
-            <div class="cell">คะแนนรวมใหม่:</div>
-            <div class="cell" id="GPACNew">0.00</div>
-        </div>
-        <div class="row">
-            <div class="cell">หน่วยกิตรวมใหม่:</div>
-            <div class="cell" id="totalCreditsNew">0</div>
-            <div class="cell"></div>
-            <div class="cell">GPA:</div>
-            <div class="cell" id="GPA">0.00</div>
-        </div>
+    <div class="row">
+        <div class="cell">หน่วยกิตรวมปัจจุบัน:</div>
+        <div class="cell"><input type="number" id="currentCredit" value="0" onchange="recalculate()"></div>
+        <div class="cell">GPA:</div>
+        <div class="cell"><input type="number" id="currentGPA" value="0" onchange="changeMode('knowGPA')"></div>
+        <div class="cell" id="currentGPANote"></div>
     </div>
-    <div class="footnote">
-        <p>คะแนนรวม (GPAC) คือ ผลรวมของคะแนนของทุกรายวิชา <br>คะแนน หมายถึง ผลคูณของเกรดและหน่วยกิตของวิชานั้นๆ เช่น วิชา 3 หน่วยกิต (3.5) จะได้คะแนนเท่ากับ 10.5<br> การนับหน่วยกิตรวม ทุกวิชา รวมวิชาที่ได้ F ด้วย <br> ในการ regrade ให้ใส่เกรดเดิมในช่อง previous grade เพื่อให้ค่า GPAC มีการ update อย่างถูกต้อง</p>
+</div>
+<fieldset style="margin:1em">
+    <legend>วิชา S/U ที่เรียนแล้ว:</legend>
+    <div>
+        <input type="checkbox" id="su_prep" name="su_prep" onchange="recalculate()"/>
+        <label for="su_prep">Preparation for Professional Experience (1 credit)</label>
     </div>
+    <div>
+        <input type="checkbox" id="su_coop" name="su_coop" onchange="recalculate()"/>
+        <label for="su_coop">Co-operative Education (3 credits)</label>
+    </div>
+</fieldset>
+<table>
+    <thead>
+    <tr>
+        <th style="width:200px">Class Details</th>
+        <th>Credits</th>
+        <th>Grade</th>
+        <th>Previous Grade</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody id="class-table-body">
+    </tbody>
+</table>
+<button class="button" onclick="addClass()">Add Class</button>
+<hr>
+<div class="table-container">
+    <div class="row">
+        <div class="cell">ชื่อ นศ:</div>
+        <div class="cell" id="newStudentName"></div>
+        <div class="cell">คะแนนรวมใหม่:</div>
+        <div class="cell" id="newPoint">0.00</div>
+        <div class="cell"></div>
+    </div>
+    <div class="row">
+        <div class="cell">หน่วยกิตรวมใหม่:</div>
+        <div class="cell" id="newCredit">0</div>
+        <div class="cell">GPA:</div>
+        <div class="cell" id="newGPA">0.00</div>
+        <div class="cell"></div>
+    </div>
+</div>
+<div class="footnote">
+    <p>คะแนนรวมสะสม คือ ผลรวมของคะแนนของทุกรายวิชา <br>คะแนน หมายถึง ผลคูณของเกรดและหน่วยกิตของวิชานั้นๆ เช่น วิชา 3
+        หน่วยกิต (3.5) จะได้คะแนนเท่ากับ 10.5<br> การนับหน่วยกิตรวม ทุกวิชา รวมวิชาที่ได้ F ด้วย <br> ในการ regrade
+        ให้ใส่เกรดเดิมในช่อง previous grade เพื่อให้ค่า GPA มีการ update อย่างถูกต้อง</p>
+</div>
 </body>
 </html>
