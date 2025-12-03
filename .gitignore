@@ -10,3 +10,4 @@ classes/ERP/mockup_company/*.csv
 client_secret.json
 service_key.json
 classes/ERP/generated_data/
+*.pyc

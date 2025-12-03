@@ -115,6 +115,6 @@ with open(get_euler_data_filepath(filename="p089_roman.txt")) as data:
         line = line.strip()
         number = roman_to_number(line)
         best_roman = number_to_roman(number)
-        print(line, best_roman, len(line), len(best_roman))
+        # print(line, best_roman, len(line), len(best_roman))
         char_diff += len(line) - len(best_roman)
     print(char_diff)
