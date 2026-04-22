@@ -45,7 +45,11 @@
     Date.prototype.diffDays = function(dateObj) {
         return (this.withoutTime().getTime() - dateObj.withoutTime().getTime())/1000/60/60/24;
     };
-
+     
+    
+    if((document.cookie.length > 0) & (document.cookie.substr(0, 4)==="url=")) {
+        document.getElementById('sheetUrl').value = document.cookie.substr(4);
+    }
     function fetchAndRender() {
       const url = document.getElementById('sheetUrl').value.replace(/\/edit.*$/, '/export?format=csv');
       const begin_date = new Date(2026, 3, 18); // 3 because Date starts months at 0 FFS
@@ -54,6 +58,7 @@
       const base_ielts = 4.5;
       const unread_penalty = 0.5;
       const target_date = new Date(2026, 7, 1); // 3 because Date starts months at 0 FFS
+      document.cookie = `url=${url}`;
 
       var rows;
       var headers;
