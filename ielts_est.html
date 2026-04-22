@@ -48,7 +48,6 @@
 
     function fetchAndRender() {
       const url = document.getElementById('sheetUrl').value.replace(/\/edit.*$/, '/export?format=csv');
-      const col = document.getElementById('columnName').value.trim();
       const begin_date = new Date(2026, 3, 18); // 3 because Date starts months at 0 FFS
       const hours_per_ielts = 150;
       const owner_email = "tpatikorn@gmail.com";
@@ -81,13 +80,13 @@
                   unread_streak += 1;
                   var ielts_diff = -unread_penalty*unread_streak/hours_per_ielts;
                   cur_ielts += ielts_diff;
-                  result += `SKIP ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${ielts_diff.toFixed(4)})\n`;
+                  result += `SKIP ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${ielts_diff.toFixed(4)} for skipping ${unread_streak} day(s) in a row)\n`;
               }
               
               cur_date = reading_date;
               var ielts_diff = reading[2]/hours_per_ielts;
               cur_ielts += ielts_diff;
-              result += `READ ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (+${ielts_diff.toFixed(4)})\n`;
+              result += `READ ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (+${ielts_diff.toFixed(4)}  for reading ${reading[2]} hour(s))\n`;
           }
 
           const average_ielts_gain = (cur_ielts - base_ielts) / cur_date.diffDays(begin_date);
@@ -95,7 +94,7 @@
           result += `\nESTIMATING IELTS UNTIL ${target_date.toDateString()}\n`;
           while(cur_date.beforeDate(target_date)) {
               cur_ielts += average_ielts_gain;
-              result += `READ ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${average_ielts_gain < 0 ? "" : "+"}${average_ielts_gain.toFixed(4)})\n`;
+              result += `READ ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${average_ielts_gain < 0 ? "" : "+"}${average_ielts_gain.toFixed(4)} on average)\n`;
               cur_date = cur_date.addDays(1);
           }
           document.getElementById("cloud").innerText = result;
