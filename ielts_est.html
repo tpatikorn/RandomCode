@@ -49,6 +49,7 @@
     
     if((document.cookie.length > 0) & (document.cookie.substr(0, 4)==="url=")) {
         document.getElementById('sheetUrl').value = document.cookie.substr(4);
+        fetchAndRender();
     }
     function fetchAndRender() {
       const url = document.getElementById('sheetUrl').value.replace(/\/edit.*$/, '/export?format=csv');
