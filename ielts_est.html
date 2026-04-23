@@ -59,9 +59,10 @@
       const url = document.getElementById('sheetUrl').value;
       document.cookie = `url=${url}`;
 
-      const begin_date = new Date(2026, 3, 18); // 3 because Date starts months at 0 FFS
-      const hours_per_ielts = 150;
-      const base_ielts = 4.5;
+      const begin_date = new Date(2026, 3, 17); // 3 because Date starts months at 0 FFS
+      const today = new Date();
+      const hours_per_ielts = 120;
+      const base_ielts = 5;
       const unread_penalty = 0.5;
       const target_date = new Date(2026, 7, 1); // 3 because Date starts months at 0 FFS
       var rows;
@@ -75,10 +76,12 @@
           headers = rows[0];
           data = rows.slice(1);
           
+          var daily_gain = [0]; // in case the first ever row is same date
+          
           var cur_date = new Date(begin_date);
           var cur_ielts = base_ielts;
           var result = "";
-          for(d=0; d < data.length; d++) {
+          for(d=0; (d < data.length) | (cur_date.beforeDate(new Date())); d++) {
               const reading = data[d];
               var reading_date = new Date(reading[0]);
 
@@ -90,20 +93,38 @@
                   var ielts_diff = -unread_penalty*unread_streak/hours_per_ielts;
                   cur_ielts += ielts_diff;
                   result += `SKIP ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${ielts_diff.toFixed(4)} for skipping ${unread_streak} day(s) in a row)\n`;
+                  daily_gain.unshift(ielts_diff);
               }
               
-              cur_date = reading_date;
               var ielts_diff = reading[1]/hours_per_ielts;
               cur_ielts += ielts_diff;
+              if(cur_date.sameDate(reading_date)) {
+                  daily_gain[0] += ielts_diff;
+              }
+              else {
+                  cur_date = reading_date;
+                  daily_gain.unshift(ielts_diff);
+              }
               result += `READ ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (+${ielts_diff.toFixed(4)}  for reading ${reading[1]} hour(s))\n`;
           }
-
-          const average_ielts_gain = (cur_ielts - base_ielts) / cur_date.diffDays(begin_date);
+          
+          while(cur_date.beforeDate(today)) {
+              cur_date = cur_date.addDays(1);
+              unread_streak += 1;
+              var ielts_diff = -unread_penalty*unread_streak/hours_per_ielts;
+              cur_ielts += ielts_diff;
+              result += `SKIP ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${ielts_diff.toFixed(4)} for skipping ${unread_streak} day(s) in a row)\n`;
+              daily_gain.unshift(ielts_diff);
+          }
+          console.log(daily_gain);
           
           result += `\nESTIMATING IELTS UNTIL ${target_date.toDateString()}\n`;
+          var day_sim_index = 0;
           while(cur_date.beforeDate(target_date)) {
-              cur_ielts += average_ielts_gain;
-              result += `READ ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${average_ielts_gain < 0 ? "" : "+"}${average_ielts_gain.toFixed(4)} on average)\n`;
+              var ielts_diff = daily_gain[6 - (day_sim_index % 7)];
+              day_sim_index += 1;
+              cur_ielts += ielts_diff;
+              result += `>>>> ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${ielts_diff < 0 ? "" : "+"}${ielts_diff.toFixed(4)} based on past 7 days)\n`;
               cur_date = cur_date.addDays(1);
           }
           document.getElementById("cloud").innerText = result;
