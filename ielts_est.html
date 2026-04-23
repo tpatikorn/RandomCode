@@ -81,6 +81,9 @@
           var cur_date = new Date(begin_date);
           var cur_ielts = base_ielts;
           var result = "";
+          
+          var row_count = 0;
+
           for(d=0; (d < data.length) | (cur_date.beforeDate(new Date())); d++) {
               const reading = data[d];
               var reading_date = new Date(reading[0]);
@@ -94,6 +97,10 @@
                   cur_ielts += ielts_diff;
                   result += `SKIP ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${ielts_diff.toFixed(4)} for skipping ${unread_streak} day(s) in a row)\n`;
                   daily_gain.unshift(ielts_diff);
+                  row_count += 1;
+                  if(row_count % 7 == 0) {
+                      result +="\n";
+                  }
               }
               
               var ielts_diff = reading[1]/hours_per_ielts;
@@ -106,6 +113,11 @@
                   daily_gain.unshift(ielts_diff);
               }
               result += `READ ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (+${ielts_diff.toFixed(4)}  for reading ${reading[1]} hour(s))\n`;
+              row_count += 1;
+              if(row_count % 7 == 0) {
+                  result +="\n";
+              }
+
           }
           
           while(cur_date.beforeDate(today)) {
@@ -115,6 +127,10 @@
               cur_ielts += ielts_diff;
               result += `SKIP ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${ielts_diff.toFixed(4)} for skipping ${unread_streak} day(s) in a row)\n`;
               daily_gain.unshift(ielts_diff);
+              row_count += 1;
+              if(row_count % 7 == 0) {
+                  result +="\n";
+              }
           }
           console.log(daily_gain);
           
@@ -126,6 +142,10 @@
               cur_ielts += ielts_diff;
               result += `>>>> ${cur_date.toDateString()} => new IELTS ${cur_ielts.toFixed(4)} (${ielts_diff < 0 ? "" : "+"}${ielts_diff.toFixed(4)} based on past 7 days)\n`;
               cur_date = cur_date.addDays(1);
+              row_count += 1;
+              if(row_count % 7 == 0) {
+                  result +="\n";
+              }
           }
           document.getElementById("cloud").innerText = result;
         });
