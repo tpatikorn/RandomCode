@@ -16,6 +16,7 @@ let lastKnownEndTime = new Date();
 lastKnownEndTime.setHours(lastKnownEndTime.getHours() + 2);
 lastKnownEndTime.setMinutes(Math.floor(lastKnownEndTime.getMinutes()/30)*30);
 lastKnownEndTime.setSeconds(0);
+lastKnownEndTime.setMilliseconds(0);
 $("#end_time").val(lastKnownEndTime.toLocaleString());
 
 $("#doMsecs").on("click", function() {
@@ -65,13 +66,14 @@ function updateTime() {
 	const min = Math.floor(td/60);
 	td = td - (min * 60);
 
-	document.getElementById("end_time_display").innerHTML = `${lastKnownEndTime.getHours()}:${lastKnownEndTime.getMinutes().toString().padStart(2, "0")}:${lastKnownEndTime.getSeconds().toString().padStart(2, "0")}`;
 
 	if(doMsecs) {
+	document.getElementById("end_time_display").innerHTML = `${lastKnownEndTime.getHours()}:${lastKnownEndTime.getMinutes().toString().padStart(2, "0")}:${lastKnownEndTime.getSeconds().toString().padStart(2, "0")}`;
 	document.getElementById("time").innerHTML = `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}.${now.getMilliseconds().toString().padStart(3, "0")}`;
 	document.getElementById("time_delta").innerHTML = `${hr} ชั่วโมง ${min.toString().padStart(2, "0")} นาที ${td.toFixed(3).toString().padStart(6, "0")} วินาที`;
 	} 
 	else {
+	document.getElementById("end_time_display").innerHTML = `${lastKnownEndTime.getHours()}:${lastKnownEndTime.getMinutes().toString().padStart(2, "0")}:${lastKnownEndTime.getSeconds().toString().padStart(2, "0")}`;
 	document.getElementById("time").innerHTML = `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`;
 	document.getElementById("time_delta").innerHTML = `${hr} ชั่วโมง ${min.toString().padStart(2, "0")} นาที ${td.toFixed(0).toString().padStart(2, "0")} วินาที`;
 	}
@@ -110,13 +112,11 @@ var flasher = null;
 สิ้นสุดเวลา: <code id="end_time_display"></code><br>
 ขณะนี้เวลา: <code id="time"></code><br>
 เหลือเวลา: <code id="time_delta"> </code>
-<h5>
-เปิด internet ได้ ใช้ ChatGPT และ AI ผู้ช่วยอื่นๆได้ ห้ามลอกกัน ห้ามปรึกษาคนอื่น<br>
-หากมีคำถามหรือปัญหา ถามผมได้ทันที</h5>
+<h5>หากมีคำถามหรือปัญหา ให้ถามอาจารย์ผู้คุมสอบทันที</h5>
 </div>
 <div style="text-align: center;margin: auto; ">
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/tHRm22e2kyc?si=__idKQBgD4KvmpLs"  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3URtTIdnXIk?si=m_VDI4wt0IpZbis_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </p>
 </body>
 <html>
