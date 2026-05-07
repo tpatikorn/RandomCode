@@ -50,17 +50,25 @@ positions = [("CEO", 1, 500_000),
              ("CFO", 1, 300_000),
              ("CTO", 1, 300_000),
              ("CMO", 1, 300_000),
-             ("director", 10, 100_000),
-             ("team leader", 20, 50_000),
-             ("senior", 30, 30_000),
-             ("junior", 35, 15_000)]
+             ("director", 2, 100_000),
+             ("team leader", 4, 50_000),
+             ("senior", 6, 30_000),
+             ("junior", 8, 15_000)]
 
-company_names = ["Money Me Ltd.", "Account_ac Lyd.", "Lucky U Ltd.", "KWAM OD TON MEE CO., LTD.",
-                 "P.B.R.N Corporation", "Umbrellar Corporation", "Bang Pha Pleun Company"]
+company_names = [
+    ("Rich for Sure, Just Not Now Co. Ltd.", 5),
+    ("PLAY ALL DAY COMPANY", 6),
+    ("EVERGROW UNLIMITED CO. LTD.", 5),
+    ("Kwam Od Ton Mee Co. Ltd.", 4),
+    ("F.N. Co.", 3),
+    ("ITAEWON CLASS CO. LTD.", 2),
+    ("Mee Tura Mai Co. Ltd.", 2),
+    ("Forever My Ex Co. Ltd.", 2),
+    ("Missing Data Co. Ltd.", 2)]
 
-random.seed(2023)
+random.seed(2025)
 
-for name in company_names:
+for name, team_size in company_names:
     fn = first_names.copy()
     ln = last_names.copy()
     random.shuffle(fn)
@@ -75,13 +83,24 @@ for name in company_names:
     font.name = 'Times News Roman'
     font.size = Pt(18)
     font.bold = True
-    all_data = [["Company", "id", "FirstName", "LastName", "Position", "Salary", "Height", "Weight", "DoY", "Year", "DoB"]]
+    all_data = [["Company", "id", "FirstName", "LastName", "Position", "Salary", "Height", "Weight", "Gender", "DoY", "Year", "DoB"]]
     employee_id = 1
     for p in positions:
-        for i in range(p[1] + random.randint(0, math.floor(p[1] / 2))):
+        employee_rank_count = p[1]
+        if p[1] > 1:
+            employee_rank_count = random.randint(p[1] * team_size,
+                                                 p[1] * (team_size + 1))
+        for i in range(employee_rank_count):
             document.add_paragraph(f"{name}").style = Title_style
-            data_row = [name, employee_id, fn.pop(), ln.pop(), p[0], math.floor(p[2] * (1 + random.random() / 3)),
-                        random.randint(150, 190), random.randint(50, 90)]
+            data_row = [name,
+                        employee_id,
+                        fn.pop(),
+                        ln.pop(),
+                        p[0],
+                        math.floor(p[2] * (1 + random.random() / 3)),
+                        random.randint(150, 190),
+                        random.randint(50, 90),
+                        random.choice(['male', 'female', 'other'])]
             employee_id += 1
             day_of_year = random.randint(1, 365)
             birth_year = random.randint(1950, 2000)
@@ -101,8 +120,10 @@ for name in company_names:
             content.add_run(f"\t{data_row[6]}\t").underline = True
             content.add_run("\nWeight: ")
             content.add_run(f"\t{data_row[7]}\t").underline = True
+            content.add_run("\nGender: ")
+            content.add_run(f"\t{data_row[8]}\t").underline = True
             content.add_run("\nDate of Birth: ")
-            content.add_run(f"\t{data_row[9]}\t").underline = True
+            content.add_run(f"\t{data_row[10]}\t").underline = True
             content.add_run().add_break(WD_BREAK.PAGE)
     with open(f"employee_csv/{name}.txt", "w+") as txt_file:
         for line in all_data:

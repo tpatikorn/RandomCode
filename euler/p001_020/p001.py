@@ -5,3 +5,4 @@ for i in range(0, 1000):
     elif i % 5 == 0:
         s = s + i
 print(s)
+

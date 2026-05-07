@@ -9,7 +9,7 @@ import datetime
 import pandas as pd
 from os import path, listdir
 
-random.seed(2023)
+random.seed(2025)
 
 
 def randint_plusminus(val_mid, val_min=1, val_max=5, val_range=2):
@@ -17,10 +17,10 @@ def randint_plusminus(val_mid, val_min=1, val_max=5, val_range=2):
                           min(val_mid % (val_max - val_min + 1) + val_range + val_min, val_max))
 
 
-for filename in listdir("generated_data/employee_csv"):
+for filename in listdir("employee_csv"):
     company_name = filename[0: -4]
-    data = pd.read_csv(path.join("generated_data/employee_csv", filename))
-    reviews = pd.read_csv(path.join("generated_data/review_csv", filename))
+    data = pd.read_csv(path.join("employee_csv", filename))
+    reviews = pd.read_csv(path.join("review_csv", filename))
 
     all_data = [["review_id", "product_id", "product_name", "price", "purchase_count", "promotion"]]
     print(company_name)

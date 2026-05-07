@@ -5,7 +5,7 @@ import math
 from datetime import datetime
 
 START_FIRST_DATE = datetime(2000, 1, 1)
-LAST_END_DATE = datetime(2024, 12, 31)
+LAST_END_DATE = datetime(2025, 12, 31)
 EMPLOYEE_SIZE = np.random.randint(10_000, 12_000)
 MAX_RANK = math.ceil(math.log(EMPLOYEE_SIZE)) + 2
 

@@ -5,7 +5,8 @@ classes/ai/models/
 models/
 .env
 .idea
-classes/ERP/mockup_company/*.csv
+classes/ERP/*/*.csv
+classes/ERP/*/*.docx
 .venv
 client_secret.json
 service_key.json
