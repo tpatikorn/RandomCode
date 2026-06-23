@@ -1,14 +1,18 @@
 import math
-from math import sqrt, inf, ceil, floor
-from typing import List
 import os
+from math import sqrt, inf, ceil, floor
+from typing import List, Dict, Set
 
 __divisors = {1: set()}
 __primes = [2, 3]
 __highest_tested = 4
-__factor_chain = {1: [None, None]}
+__factor_chain: Dict[int, List[int | None]] = {1: [None, None]}
 __partition_with_max = {(1, 1): 1}
 __partition_with_max_prime = {(1, 1): 0}
+
+
+def deduplicate(seq):
+    return sorted(list(set(seq)))
 
 
 def is_palindrome(obj):
@@ -58,16 +62,16 @@ def is_probable_prime(n, num_bases=7, minimum=1_000):
     return True
 
 
-def get_prime_list(limit=None, n_primes=None):
+def get_prime_list(limit=999999999, n_primes=999999999):
     global __highest_tested, __primes
-    if limit is not None and n_primes is None:
-        n_primes = 999999999
-    if n_primes is not None and limit is None:
-        limit = 999999999
+
+    # shortcut
     if n_primes <= len(__primes):
         return __primes[0: n_primes]
     if limit <= __highest_tested:
         return [_ for _ in __primes if _ < limit]
+
+    # else
     return _get_prime_list(limit, n_primes)
 
 
@@ -90,7 +94,7 @@ def _get_prime_list(limit, n_primes):
     return __primes
 
 
-def find_divisors(num, proper=False):
+def find_divisors(num: int, proper=False) -> Set[int]:
     if proper:
         return find_divisors(num, False) - {num}
     try:
@@ -99,7 +103,7 @@ def find_divisors(num, proper=False):
         __divisors[num] = {1, num}
         for p in range(2, ceil(sqrt(num)) + 1):
             if num % p == 0:
-                __divisors[num] = __divisors[num].union(find_divisors(p)).union(find_divisors(int(num / p)))
+                __divisors[num] = __divisors[num].union(find_divisors(p)).union(find_divisors(int(num // p)))
         return __divisors[num]
 
 
@@ -112,11 +116,12 @@ def __trace_factor_chain(num: int):
     return factors
 
 
-def factorize(num):
+# return the set of unique prime factors
+def factorize(num) -> Set[int]:
     try:
         if is_prime(num):
             __factor_chain[num] = [num, None]
-            return [num]
+            return {num}
         return __trace_factor_chain(num)
     except KeyError:
         curr = num
@@ -135,6 +140,32 @@ def factorize(num):
                     break
         return __trace_factor_chain(num)
 
+
+# return the dict of prime: number of "repetitions" of that prime as factor
+# e.g. 60 = 2 * 2 * 3 * 5
+# then full_factorize(60) = {2: 2, 3:1, 5:1}
+# e.g. 72 = 2 * 2 * 2 * 3 * 3
+# then full_factorize(72) = {2: 3, 3:2}
+__full_factor_chain = {2: {2: 1}}
+def full_factorize(num) -> dict[int, int]:
+    try:
+        if is_prime(num):
+            __full_factor_chain[num] = {num: 1}
+        return __full_factor_chain[num]
+    except KeyError:
+        curr = num
+        __temp_factor = {}
+        for p in get_prime_list(limit=int(sqrt(num) + 1)):
+            factor_count = 0
+            while curr % p == 0 and curr > 1:
+                factor_count += 1
+                curr = curr // p
+            if factor_count > 0:
+                __temp_factor[p] = factor_count
+            if num == 1:
+                break
+        __full_factor_chain[num] = __temp_factor
+        return __full_factor_chain[num]
 
 def factorize_range(max_number):
     prime_list = get_prime_list(max_number)
@@ -164,10 +195,10 @@ def slope(src, dst):
 
 
 def is_permutation(a: List[int] | int, b: List[int] | int) -> bool:
-    if type(a) is int:
-        a = [int(_) for _ in str(a)]
-    if type(b) is int:
-        b = [int(_) for _ in str(b)]
+    if isinstance(a, int):
+        a: List[int] = [int(_) for _ in str(a)]
+    if isinstance(b, int):
+        b: List[int] = [int(_) for _ in str(b)]
     return sorted(a) == sorted(b)
 
 
@@ -230,7 +261,24 @@ import random
 test_input = [random.randint(int(1), int(10e9)) for _ in range(10_000)]
 
 max_sqrt = 1_000_000
-squares = {_ ** 2 for _ in range(2, max_sqrt)}
+squares = set()
+
+
+def fast_isqrt_check(n):
+    global squares
+    if len(squares) == 0:
+        squares = {_ ** 2 for _ in range(2, max_sqrt)}
+        print("finished initializing squares")
+    if n < 0:
+        return False
+    if n < max_sqrt * max_sqrt:
+        return n in squares
+
+    if (n & 0xF) not in [0, 1, 4, 9]:
+        return False
+
+    x = math.isqrt(n)
+    return x * x == n
 
 
 def fun1():

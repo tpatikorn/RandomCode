@@ -1,14 +1,15 @@
 from functools import reduce
 from operator import mul
+from typing import List, Tuple
 
 
-def product(l):
+def product(l: List[int]):
     return reduce(mul, l, 1)
 
 
 def find_min_product_sum(length):
     # the queue of (list, ptr) where ptr tells which elt to explore next
-    explore_queue = [([1 for _ in range(length)], 0)]
+    explore_queue: List[Tuple[List[int], int]] = [([1 for _ in range(length)], 0)]
     while explore_queue:
         current_array, ptr = explore_queue.pop(0)
         current_array[ptr] += 1
