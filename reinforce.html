@@ -41,9 +41,11 @@
     </div>
     <div class="image-container">
 	<div style="width:100%;text-align:center;">
-current sum = <span id="sum_numbers">0</span><br>
-current count = <span id="count_numbers">0</span><br>
-current average = <span id="average_numbers">?</span>
+<div style="width: 60%;align-items: center;margin: auto;">
+	<img src="https://tpatikorn.github.io/RandomCode/reinforce_qr.png" style="width: 60px;height: 60px;float: right;">
+	current sum = <span id="sum_numbers">0</span><br>
+	current count = <span id="count_numbers">0</span><br>
+	current average = <span id="average_numbers">?</span>
 <div>
         <div class="image-box">
             <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Old_wooden_door_Segovia_Spain.jpg" alt="Image 1" 
@@ -64,7 +66,6 @@ onclick="handleClick(10, 95, 'list3')" style="border-color:blue"><br>
             <ul id="list3"></ul>
         </div>
     </div>
-
     <script>
 	let currentSum = 0;
 	let currentCount = 0;
@@ -103,10 +104,10 @@ onclick="handleClick(10, 95, 'list3')" style="border-color:blue"><br>
             document.getElementById(listId).innerHTML = document.getElementById(listId).innerHTML + " " + randomNumber;
             document.getElementById("sum_numbers").innerHTML = currentSum;
             document.getElementById("count_numbers").innerHTML = currentCount + " / " + limit;
-            document.getElementById("average_numbers").innerHTML = (currentSum/currentCount).toFixed(2);
+            document.getElementById("average_numbers").innerHTML = (currentSum/currentCount).toFixed(3);
             sums[listId][0] += randomNumber;
             sums[listId][1] ++;
-	    document.getElementById("avg"+listId.charAt(4)).innerHTML = (sums[listId][0]/sums[listId][1]).toFixed(2);
+	    document.getElementById("avg"+listId.charAt(4)).innerHTML = (sums[listId][0]/sums[listId][1]).toFixed(3);
             }
         }
     </script>
