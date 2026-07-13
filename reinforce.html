@@ -34,19 +34,21 @@
     </style>
 </head>
 <body style="font-size:24px">
+<div style="width: 60%;align-items: center;margin: auto;">
+    <img src="https://tpatikorn.github.io/RandomCode/reinforce_qr.png" style="max-width: 100px; max-height: 100px;float: left; border: none">
     <div>
         <button onclick="reset_score(10)">limit=10</button>
         <button onclick="reset_score(30)">limit=30</button>
         <button onclick="reset_score(50)">limit=50</button>
     </div>
+    <div>
+	Total = <span id="sum_numbers">0</span><br>
+	Count = <span id="count_numbers">0</span><br>
+	Average = <span id="average_numbers">?</span>
+    </div>
+</div>
     <div class="image-container">
 	<div style="width:100%;text-align:center;">
-<div style="width: 60%;align-items: center;margin: auto;">
-	<img src="https://tpatikorn.github.io/RandomCode/reinforce_qr.png" style="width: 60px;height: 60px;float: right;">
-	current sum = <span id="sum_numbers">0</span><br>
-	current count = <span id="count_numbers">0</span><br>
-	current average = <span id="average_numbers">?</span>
-<div>
         <div class="image-box">
             <img src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Old_wooden_door_Segovia_Spain.jpg" alt="Image 1" 
 onclick="handleClick(20, 80, 'list1')" style="border-color:red"><br>
